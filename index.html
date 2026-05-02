@@ -329,7 +329,7 @@ main{max-width:920px;margin:0 auto;padding:20px 14px}
         <img id="about-main-img" src="" style="display:none">
         <span id="about-fallback">শি</span>
       </div>
-      <div style="font-size:22px;font-weight:800;color:var(--primary);margin-bottom:4px">ফোজাইল আহমেদ শিহাব</div>
+      <div style="font-size:22px;font-weight:800;color:var(--primary);margin-bottom:4px">ফোজাইল আহম্মেদ শিহাব</div>
       <span style="background:linear-gradient(135deg,var(--primary),var(--light));color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:20px;display:inline-block;margin-bottom:20px">ওয়েবসাইট নির্মাতা</span>
       <div style="background:var(--bg);border-radius:14px;padding:4px 0;margin-bottom:12px">
         <table style="width:100%;border-collapse:collapse;text-align:left">
@@ -344,14 +344,49 @@ main{max-width:920px;margin:0 auto;padding:20px 14px}
   </div>
 </div>
 
+<div id="load-msg" style="display:none;position:fixed;bottom:20px;right:20px;background:#1e3a8a;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 4px 14px rgba(0,0,0,.2)">ডেটা লোড হচ্ছে...</div>
 </main>
 
 <script>
 var PASS='math2024';
-var D=JSON.parse(localStorage.getItem('gmc')||'{"notices":[],"exams":[],"teachers":[],"assigns":[],"routines":[{},{},{},{},{}]}');
+var BIN_ID='69f5ceadaaba882197617a71';
+var API_KEY='$2a$10$QNtMj664gTklVoGUE4J.Ru2gsa02iSrPZNvj8Gexu2cLE80OX1kdG';
+var D={notices:[],exams:[],teachers:[],assigns:[],routines:[{},{},{},{},{}]};
 var eYear=1,eType='final',aYear=1;
 
-function save(){localStorage.setItem('gmc',JSON.stringify(D));}
+function showLoading(msg){
+  var el=document.getElementById('load-msg');
+  if(el){el.textContent=msg||'লোড হচ্ছে...';el.style.display='block';}
+}
+function hideLoading(){
+  var el=document.getElementById('load-msg');
+  if(el) el.style.display='none';
+}
+
+function save(){
+  fetch('https://api.jsonbin.io/v3/b/'+BIN_ID,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json','X-Master-Key':API_KEY},
+    body:JSON.stringify(D)
+  }).catch(function(e){console.error('Save error',e);});
+}
+
+function loadData(){
+  showLoading('ডেটা লোড হচ্ছে...');
+  fetch('https://api.jsonbin.io/v3/b/'+BIN_ID+'/latest',{
+    headers:{'X-Master-Key':API_KEY}
+  }).then(function(r){return r.json();})
+  .then(function(j){
+    if(j&&j.record) D=j.record;
+    hideLoading();
+    renderAll();
+loadData();
+  }).catch(function(e){
+    console.error('Load error',e);
+    hideLoading();
+    renderAll();
+  });
+}
 
 function go(id,btn){
   document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});
