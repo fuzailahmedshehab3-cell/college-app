@@ -121,7 +121,7 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
 <div id="math-bg"></div>
 <header id="main-header">
   <div class="hi">
-    <div class="logo">গণিত</div>
+    <div class="logo">∑</div>
     <div class="ht"><h1>গণিত বিভাগ</h1><p>গুরুদয়াল সরকারি কলেজ, কিশোরগঞ্জ</p></div>
   </div>
   <div class="ticker">
@@ -650,65 +650,71 @@ function updateTicker(){var t=document.getElementById('ttx');if(t&&(D.notices||[
 
 function renderUpcoming(){
   var el=document.getElementById('upcoming-list');if(!el)return;
-  var now=new Date();now.setHours(0,0,0,0);
+  var now=new Date();
+  var todayStr=now.getFullYear()+'-'+(now.getMonth()<9?'0':'')+(now.getMonth()+1)+'-'+(now.getDate()<10?'0':'')+now.getDate();
   var items=[];
+
+  function dayDiff(dateStr){
+    var parts=dateStr.split('-');
+    var d=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
+    var t=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    return Math.round((d-t)/86400000);
+  }
+  function getDay(dateStr){var p=dateStr.split('-');return new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));}
 
   // পরীক্ষা
   (D.exams||[]).forEach(function(e){
-    var d=new Date(e.date);d.setHours(0,0,0,0);
-    if(d>=now){
-      var diff=Math.round((d-now)/86400000);
-      var tl={final:'📋 ফাইনাল',incourse:'📌 ইনকোর্স',classtest:'✏️ ক্লাস টেস্ট'};
-      var tc={final:'#2d1b69',incourse:'#1e3a5f',classtest:'#3b1f00'};
-      var bc={final:'#7c3aed',incourse:'#3b82f6',classtest:'#d97706'};
-      items.push({date:d,html:'<div style="background:'+tc[e.type||'final']+';border:1px solid '+bc[e.type||'final']+';border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">'+
-        '<div style="background:linear-gradient(135deg,'+bc[e.type||'final']+',#1e293b);border-radius:12px;padding:10px 13px;text-align:center;min-width:54px;flex-shrink:0">'+
-        '<div style="font-size:20px;font-weight:800;color:#fff;line-height:1">'+d.getDate()+'</div>'+
-        '<div style="font-size:10px;color:rgba(255,255,255,.8);margin-top:2px">'+MS[d.getMonth()]+'</div></div>'+
-        '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:#fff">'+e.sub+'</div>'+
-        '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">'+tl[e.type||'final']+' | '+YN[e.year]+' বর্ষ'+(e.time?' | ⏰ '+e.time:'')+'</div></div>'+
-        '<div style="text-align:right;flex-shrink:0"><div style="font-size:18px;font-weight:800;color:#fbbf24">'+( diff===0?'আজ':diff+'দিন')+'</div>'+
-        '<div style="font-size:10px;color:rgba(255,255,255,.5)'+(diff===0?';color:#fbbf24':'')+'">'+(diff===0?'পরীক্ষা আজ!':'বাকি')+
-        '</div></div></div>'});
-    }
+    if(!e.date)return;
+    var diff=dayDiff(e.date);
+    if(diff<0)return;
+    var tl={final:'📋 ফাইনাল',incourse:'📌 ইনকোর্স',classtest:'✏️ ক্লাস টেস্ট'};
+    var tc={final:'#2d1b69',incourse:'#1e3a5f',classtest:'#3b1f00'};
+    var bc={final:'#7c3aed',incourse:'#3b82f6',classtest:'#d97706'};
+    var dd=getDay(e.date);
+    items.push({date:getDay(e.date),html:'<div style="background:'+tc[e.type||'final']+';border:1px solid '+bc[e.type||'final']+';border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">'+
+      '<div style="background:linear-gradient(135deg,'+bc[e.type||'final']+',#1e293b);border-radius:12px;padding:10px 13px;text-align:center;min-width:54px;flex-shrink:0">'+
+      '<div style="font-size:20px;font-weight:800;color:#fff;line-height:1">'+dd.getDate()+'</div>'+
+      '<div style="font-size:10px;color:rgba(255,255,255,.8);margin-top:2px">'+MS[dd.getMonth()]+'</div></div>'+
+      '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:#fff">'+e.sub+'</div>'+
+      '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">'+tl[e.type||'final']+' | '+YN[e.year]+' বর্ষ'+(e.time?' | ⏰ '+e.time:'')+'</div></div>'+
+      '<div style="text-align:right;flex-shrink:0"><div style="font-size:18px;font-weight:800;color:#fbbf24">'+(diff===0?'আজ':diff+'দিন')+'</div>'+
+      '<div style="font-size:10px;color:rgba(255,255,255,.5)'+(diff===0?';color:#fbbf24':'')+'">'+(diff===0?'পরীক্ষা আজ!':'বাকি')+'</div></div></div>'});
   });
 
   // প্র্যাকটিক্যাল
   (D.practicals||[]).forEach(function(p){
-    var d=new Date(p.date);d.setHours(0,0,0,0);
-    if(d>=now){
-      var diff=Math.round((d-now)/86400000);
-      var isExam=p.type==='exam';
-      items.push({date:d,html:'<div style="background:#064e3b;border:1px solid #059669;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">'+
-        '<div style="background:linear-gradient(135deg,#059669,#1e293b);border-radius:12px;padding:10px 13px;text-align:center;min-width:54px;flex-shrink:0">'+
-        '<div style="font-size:20px;font-weight:800;color:#fff;line-height:1">'+d.getDate()+'</div>'+
-        '<div style="font-size:10px;color:rgba(255,255,255,.8);margin-top:2px">'+MS[d.getMonth()]+'</div></div>'+
-        '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:#fff">'+p.sub+'</div>'+
-        '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">'+(isExam?'📊 প্র্যাকটিক্যাল পরীক্ষা':'🧪 প্র্যাকটিক্যাল ক্লাস')+' | '+YN[p.year]+' বর্ষ'+(p.time?' | ⏰ '+p.time:'')+'</div>'+(p.body?'<div style="font-size:11px;color:#6ee7b7;margin-top:3px">'+p.body+'</div>':'')+
-        '</div><div style="text-align:right;flex-shrink:0"><div style="font-size:18px;font-weight:800;color:#fbbf24">'+(diff===0?'আজ':diff+'দিন')+'</div>'+
-        '<div style="font-size:10px;color:rgba(255,255,255,.5)'+(diff===0?';color:#fbbf24':'')+'">'+(diff===0?'আজ!':'বাকি')+'</div></div></div>'});
-    }
+    if(!p.date)return;
+    var diff=dayDiff(p.date);
+    if(diff<0)return;
+    var isExam=p.type==='exam';
+    var dd=getDay(p.date);
+    items.push({date:dd,html:'<div style="background:#064e3b;border:1px solid #059669;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">'+
+      '<div style="background:linear-gradient(135deg,#059669,#1e293b);border-radius:12px;padding:10px 13px;text-align:center;min-width:54px;flex-shrink:0">'+
+      '<div style="font-size:20px;font-weight:800;color:#fff;line-height:1">'+dd.getDate()+'</div>'+
+      '<div style="font-size:10px;color:rgba(255,255,255,.8);margin-top:2px">'+MS[dd.getMonth()]+'</div></div>'+
+      '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:#fff">'+p.sub+'</div>'+
+      '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">'+(isExam?'📊 প্র্যাকটিক্যাল পরীক্ষা':'🧪 প্র্যাকটিক্যাল ক্লাস')+' | '+YN[p.year]+' বর্ষ'+(p.time?' | ⏰ '+p.time:'')+'</div>'+(p.body?'<div style="font-size:11px;color:#6ee7b7;margin-top:3px">'+p.body+'</div>':'')+
+      '</div><div style="text-align:right;flex-shrink:0"><div style="font-size:18px;font-weight:800;color:#fbbf24">'+(diff===0?'আজ':diff+'দিন')+'</div>'+
+      '<div style="font-size:10px;color:rgba(255,255,255,.5)'+(diff===0?';color:#fbbf24':'')+'">'+(diff===0?'আজ!':'বাকি')+'</div></div></div>'});
   });
 
   // এসাইনমেন্ট
   (D.assigns||[]).forEach(function(a){
     if(!a.deadline)return;
-    var d=new Date(a.deadline);d.setHours(0,0,0,0);
-    if(d>=now){
-      var diff=Math.round((d-now)/86400000);
-      items.push({date:d,html:'<div style="background:#451a03;border:1px solid #d97706;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">'+
-        '<div style="background:linear-gradient(135deg,#d97706,#1e293b);border-radius:12px;padding:10px 13px;text-align:center;min-width:54px;flex-shrink:0">'+
-        '<div style="font-size:20px;font-weight:800;color:#fff;line-height:1">'+d.getDate()+'</div>'+
-        '<div style="font-size:10px;color:rgba(255,255,255,.8);margin-top:2px">'+MS[d.getMonth()]+'</div></div>'+
-        '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:#fff">'+a.title+'</div>'+
-        '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">📋 এসাইনমেন্ট জমা | '+YN[a.year]+' বর্ষ'+(a.subject?' | 📚 '+a.subject:'')+'</div></div>'+
-        '<div style="text-align:right;flex-shrink:0"><div style="font-size:18px;font-weight:800;color:#fbbf24">'+(diff===0?'আজ':diff+'দিন')+'</div>'+
-        '<div style="font-size:10px;color:rgba(255,255,255,.5)'+(diff===0?';color:#fbbf24':'')+'">'+(diff===0?'শেষ দিন!':'বাকি')+'</div></div></div>'});
-    }
+    var diff=dayDiff(a.deadline);
+    if(diff<0)return;
+    var dd=getDay(a.deadline);
+    items.push({date:dd,html:'<div style="background:#451a03;border:1px solid #d97706;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">'+
+      '<div style="background:linear-gradient(135deg,#d97706,#1e293b);border-radius:12px;padding:10px 13px;text-align:center;min-width:54px;flex-shrink:0">'+
+      '<div style="font-size:20px;font-weight:800;color:#fff;line-height:1">'+dd.getDate()+'</div>'+
+      '<div style="font-size:10px;color:rgba(255,255,255,.8);margin-top:2px">'+MS[dd.getMonth()]+'</div></div>'+
+      '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:#fff">'+a.title+'</div>'+
+      '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">📋 এসাইনমেন্ট জমা | '+YN[a.year]+' বর্ষ'+(a.subject?' | 📚 '+a.subject:'')+'</div></div>'+
+      '<div style="text-align:right;flex-shrink:0"><div style="font-size:18px;font-weight:800;color:#fbbf24">'+(diff===0?'আজ':diff+'দিন')+'</div>'+
+      '<div style="font-size:10px;color:rgba(255,255,255,.5)'+(diff===0?';color:#fbbf24':'')+'">'+(diff===0?'শেষ দিন!':'বাকি')+'</div></div></div>'});
   });
 
   if(!items.length){el.innerHTML='<div class="empty">কোনো আসন্ন কার্যক্রম নেই</div>';return;}
-  // তারিখ অনুযায়ী সাজাও
   items.sort(function(a,b){return a.date-b.date;});
   el.innerHTML=items.map(function(i){return i.html;}).join('<div style="height:8px"></div>');
 }
