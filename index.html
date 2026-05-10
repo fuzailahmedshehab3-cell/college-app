@@ -6,13 +6,16 @@
 <title>গণিত বিভাগ — গুরুদয়াল সরকারি কলেজ</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--p:#1e3a8a;--pl:#3b82f6;--ac:#f59e0b;--bg:#f0f4ff;--card:#fff;--text:#1e293b;--muted:#64748b;--bd:#e2e8f0;--ok:#10b981;--err:#ef4444;--pur:#7c3aed}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text)}
+:root{--p:#3b82f6;--pl:#60a5fa;--ac:#f59e0b;--bg:#0f172a;--card:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--bd:#334155;--ok:#10b981;--err:#ef4444;--pur:#a78bfa}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:var(--text);min-height:100vh;position:relative}
 
-/* HEADER */
+/* MATH BG */
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:#0f172a}
+#math-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;font-family:'Courier New',monospace;font-size:13px;color:rgba(96,165,250,.07);line-height:2.4;padding:16px;word-break:break-word}
+
 header{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#1d4ed8 100%);position:sticky;top:0;z-index:100;box-shadow:0 4px 24px rgba(0,0,0,.35)}
 .hi{display:flex;align-items:center;gap:14px;padding:13px 20px}
-.logo{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--ac),#f97316);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;box-shadow:0 0 0 3px rgba(245,158,11,.25);flex-shrink:0}
+.logo{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--ac),#f97316);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;box-shadow:0 0 0 3px rgba(245,158,11,.25);flex-shrink:0}
 .ht h1{font-size:17px;font-weight:700;color:#fff}
 .ht p{font-size:11px;color:#93c5fd;margin-top:1px}
 .ticker{background:rgba(245,158,11,.12);border-bottom:1px solid rgba(245,158,11,.25);padding:6px 16px;display:flex;align-items:center;gap:10px;overflow:hidden}
@@ -31,11 +34,9 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
 .sec.on{display:block;animation:fi .22s ease}
 @keyframes fi{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
 
-/* CARDS */
-.card{background:var(--card);border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 1px 2px rgba(0,0,0,.06),0 4px 18px rgba(0,0,0,.06);border:1px solid var(--bd)}
-.ct{font-size:15px;font-weight:700;color:var(--p);margin-bottom:15px;padding-bottom:11px;border-bottom:2px solid var(--bg);display:flex;align-items:center;gap:8px}
+.card{background:rgba(30,41,59,.92);backdrop-filter:blur(6px);border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 1px 2px rgba(0,0,0,.3),0 4px 18px rgba(0,0,0,.3);border:1px solid #334155}
+.ct{font-size:15px;font-weight:700;color:var(--p);margin-bottom:15px;padding-bottom:11px;border-bottom:2px solid rgba(240,244,255,.8);display:flex;align-items:center;gap:8px}
 
-/* HOME HERO */
 .hero{background:linear-gradient(135deg,#0f172a,#1e3a8a);border-radius:18px;padding:24px 20px;margin-bottom:16px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:rgba(255,255,255,.04);border-radius:50%}
 .hero::after{content:'';position:absolute;bottom:-60px;left:-40px;width:240px;height:240px;background:rgba(255,255,255,.03);border-radius:50%}
@@ -47,61 +48,51 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
 .hstat .num{font-size:22px;font-weight:800;color:#fbbf24}
 .hstat .lbl{font-size:11px;color:#93c5fd;margin-top:2px}
 
-/* TODAY SECTION */
-.today-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.today-card{border-radius:14px;padding:16px;border:1px solid var(--bd);transition:all .2s;position:relative;overflow:hidden}
+.today-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.today-card{border-radius:14px;padding:16px;border:1px solid var(--bd);transition:all .2s;background:rgba(255,255,255,.9)}
 .today-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.09)}
-.today-card .tc-icon{font-size:28px;margin-bottom:8px}
-.today-card .tc-type{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;opacity:.7}
-.today-card .tc-title{font-size:14px;font-weight:700;margin-bottom:3px}
-.today-card .tc-sub{font-size:12px;opacity:.65}
-.today-card.notice-c{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#bfdbfe}
-.today-card.exam-c{background:linear-gradient(135deg,#fdf4ff,#ede9fe);border-color:#ddd6fe}
-.today-card.assign-c{background:linear-gradient(135deg,#fff7ed,#fed7aa);border-color:#fdba74}
-.today-card.routine-c{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:#86efac}
+.tc-icon{font-size:26px;margin-bottom:7px}
+.tc-type{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;opacity:.65}
+.tc-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.tc-sub{font-size:12px;opacity:.65}
+.notice-c{background:linear-gradient(135deg,rgba(239,246,255,.9),rgba(219,234,254,.9))!important;border-color:#bfdbfe!important}
+.exam-c{background:linear-gradient(135deg,rgba(253,244,255,.9),rgba(237,233,254,.9))!important;border-color:#ddd6fe!important}
+.assign-c{background:linear-gradient(135deg,rgba(255,247,237,.9),rgba(254,215,170,.9))!important;border-color:#fdba74!important}
+.practical-c{background:linear-gradient(135deg,rgba(240,253,244,.9),rgba(220,252,231,.9))!important;border-color:#86efac!important}
 
-/* QUICK ACCESS */
-.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
-.qbtn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:14px;border:1.5px solid var(--bd);background:#fff;cursor:pointer;transition:all .2s;font-size:12px;font-weight:600;color:var(--text);font-family:inherit}
-.qbtn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1);border-color:var(--pl);color:var(--p)}
-.qbtn span{font-size:26px}
+.trow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.ytab{padding:7px 14px;border-radius:20px;border:1.5px solid #334155;background:rgba(30,41,59,.8);color:var(--muted);font-size:12px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit}
+.ytab:hover{border-color:var(--pl);color:var(--pl)}
+.ytab.on{background:var(--pl)!important;color:#fff!important;border-color:var(--pl)!important;box-shadow:0 2px 8px rgba(59,130,246,.4)}
+.ttab{padding:6px 14px;border-radius:20px;border:1.5px solid #334155;background:rgba(30,41,59,.8);color:var(--muted);font-size:12px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit}
+.ttab.on{background:var(--pur)!important;color:#fff!important;border-color:var(--pur)!important}
 
-/* NOTICE */
-.ni{border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--bd);position:relative;overflow:hidden;transition:box-shadow .2s;background:#fff}
-.ni:hover{box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.ni{border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid #334155;position:relative;overflow:hidden;transition:box-shadow .2s;background:rgba(30,41,59,.9)}
+.ni:hover{box-shadow:0 4px 14px rgba(0,0,0,.3)}
 .ni::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pl)}
 .ni.urg::before{background:var(--err)}
 .ni.nw::before{background:var(--ok)}
-.ntl{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ni.prac::before{background:var(--ok)}
+.ntl{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:#e2e8f0}
 .nm{font-size:11px;color:var(--muted);margin-top:4px}
-.nb{font-size:13px;color:#475569;margin-top:8px;line-height:1.6}
+.nb{font-size:13px;color:#94a3b8;margin-top:8px;line-height:1.6}
 .badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700}
 .br{background:#fef2f2;color:#dc2626}
 .bg2{background:#f0fdf4;color:#16a34a}
+.bpr{background:#f0fdf4;color:#059669}
 
-/* TABS */
-.trow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.ytab{padding:7px 14px;border-radius:20px;border:1.5px solid var(--bd);background:#fff;color:var(--muted);font-size:12px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit}
-.ytab:hover{border-color:var(--pl);color:var(--p)}
-.ytab.on{background:var(--p)!important;color:#fff!important;border-color:var(--p)!important;box-shadow:0 2px 8px rgba(30,58,138,.3)}
-.ttab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--bd);background:#fff;color:var(--muted);font-size:12px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit}
-.ttab.on{background:var(--pur)!important;color:#fff!important;border-color:var(--pur)!important}
-
-/* EXAM */
-.ei{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--bd);border-radius:14px;margin-bottom:8px;transition:all .2s;background:#fff}
+.ei{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--bd);border-radius:14px;margin-bottom:8px;transition:all .2s;background:rgba(255,255,255,.9)}
 .ei:hover{box-shadow:0 4px 12px rgba(0,0,0,.07);transform:translateX(2px)}
 .edt{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border-radius:12px;padding:10px 13px;text-align:center;min-width:54px}
 .edt .dy{font-size:20px;font-weight:800;line-height:1}
 .edt .mo{font-size:10px;opacity:.9;margin-top:2px}
 
-/* TEACHER */
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px}
-.tc2{border:1px solid var(--bd);border-radius:16px;padding:18px;text-align:center;transition:all .2s;background:#fff}
+.tc2{border:1px solid var(--bd);border-radius:16px;padding:18px;text-align:center;transition:all .2s;background:rgba(255,255,255,.9)}
 .tc2:hover{box-shadow:0 6px 20px rgba(0,0,0,.1);transform:translateY(-2px)}
 .av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:var(--p);font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.1)}
 
-/* ADMIN */
-.lbox{max-width:360px;margin:30px auto;background:#fff;border-radius:20px;padding:32px;box-shadow:0 8px 32px rgba(0,0,0,.12);border:1px solid var(--bd)}
+.lbox{max-width:360px;margin:30px auto;background:rgba(255,255,255,.95);border-radius:20px;padding:32px;box-shadow:0 8px 32px rgba(0,0,0,.12);border:1px solid var(--bd)}
 .fg{margin-bottom:13px}
 .fg label{display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
 .fg input,.fg textarea,.fg select{width:100%;padding:10px 13px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:all .2s;background:#fafafa}
@@ -111,7 +102,7 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
 .pbtn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(30,58,138,.4)}
 .dbtn{background:#fef2f2;color:var(--err);border:1px solid #fecaca;border-radius:8px;padding:6px 11px;font-size:12px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit}
 .dbtn:hover{background:var(--err);color:#fff}
-.apanel{background:#fff;border-radius:18px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 18px rgba(0,0,0,.06);border:1px solid var(--bd)}
+.apanel{background:rgba(255,255,255,.95);border-radius:18px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 18px rgba(0,0,0,.06);border:1px solid var(--bd)}
 .atabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
 .atab{padding:7px 13px;border:1.5px solid var(--bd);border-radius:20px;background:#fff;font-size:12px;cursor:pointer;font-weight:600;color:var(--muted);transition:all .2s;font-family:inherit}
 .atab:hover{border-color:var(--p);color:var(--p)}
@@ -127,13 +118,11 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
 </style>
 </head>
 <body>
+<div id="math-bg"></div>
 <header id="main-header">
   <div class="hi">
-    <div class="logo">গণিত</div>
-    <div class="ht">
-      <h1>গণিত বিভাগ</h1>
-      <p>গুরুদয়াল সরকারি কলেজ, কিশোরগঞ্জ</p>
-    </div>
+    <div class="logo">∑</div>
+    <div class="ht"><h1>গণিত বিভাগ</h1><p>গুরুদয়াল সরকারি কলেজ, কিশোরগঞ্জ</p></div>
   </div>
   <div class="ticker">
     <span class="tlb">নোটিশ</span>
@@ -144,6 +133,7 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
     <button onclick="go('notice',this)">📢 নোটিশ</button>
     <button onclick="go('routine',this)">📅 রুটিন</button>
     <button onclick="go('exam',this)">📝 পরীক্ষা</button>
+    <button onclick="go('practical',this)">🔬 প্র্যাকটিক্যাল</button>
     <button onclick="go('teachers',this)">👨‍🏫 শিক্ষকবৃন্দ</button>
     <button onclick="go('assignment',this)">📋 এসাইনমেন্ট</button>
     <button onclick="go('attendance',this)">✅ উপস্থিতি</button>
@@ -169,27 +159,13 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
       </div>
     </div>
   </div>
-
   <div class="card">
     <div class="ct">📅 আজকের আপডেট <span style="font-size:11px;font-weight:500;color:var(--muted);margin-left:auto" id="today-date"></span></div>
     <div id="today-updates"><div class="empty">আজকের কোনো আপডেট নেই</div></div>
   </div>
-
   <div class="card">
-    <div class="ct">📢 সর্বশেষ নোটিশ</div>
+    <div class="ct">📢 সর্বশেষ নোটিশ ও আপডেট</div>
     <div id="home-notices"><div class="empty">কোনো নোটিশ নেই</div></div>
-  </div>
-
-  <div class="card">
-    <div class="ct">⚡ দ্রুত অ্যাক্সেস</div>
-    <div class="qgrid">
-      <button class="qbtn" onclick="go('routine',null)"><span>📅</span>ক্লাস রুটিন</button>
-      <button class="qbtn" onclick="go('exam',null)"><span>📝</span>পরীক্ষা</button>
-      <button class="qbtn" onclick="go('assignment',null)"><span>📋</span>এসাইনমেন্ট</button>
-      <button class="qbtn" onclick="go('attendance',null)"><span>✅</span>উপস্থিতি</button>
-      <button class="qbtn" onclick="go('teachers',null)"><span>👨‍🏫</span>শিক্ষকবৃন্দ</button>
-      <button class="qbtn" onclick="go('facebook',null)"><span>📘</span>ফেসবুক</button>
-    </div>
   </div>
 </div>
 
@@ -223,6 +199,25 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
   </div>
 </div>
 
+<!-- PRACTICAL -->
+<div class="sec" id="sec-practical">
+  <div class="card">
+    <div class="ct">🔬 প্র্যাকটিক্যাল</div>
+    <div class="trow">
+      <button class="ytab on" id="ptab-1" onclick="setPY(1)">১ম বর্ষ</button>
+      <button class="ytab" id="ptab-2" onclick="setPY(2)">২য় বর্ষ</button>
+      <button class="ytab" id="ptab-3" onclick="setPY(3)">৩য় বর্ষ</button>
+      <button class="ytab" id="ptab-4" onclick="setPY(4)">৪র্থ বর্ষ</button>
+      <button class="ytab" id="ptab-5" onclick="setPY(5)">মাস্টার্স</button>
+    </div>
+    <div class="trow">
+      <button class="ttab on" id="ptype-class" onclick="setPT('class')">🧪 প্র্যাকটিক্যাল ক্লাস</button>
+      <button class="ttab" id="ptype-exam" onclick="setPT('exam')">📊 প্র্যাকটিক্যাল পরীক্ষা</button>
+    </div>
+    <div id="practical-list"><div class="empty">কোনো প্র্যাকটিক্যাল তথ্য নেই</div></div>
+  </div>
+</div>
+
 <!-- ASSIGNMENT -->
 <div class="sec" id="sec-assignment">
   <div class="card">
@@ -247,7 +242,7 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
 <div class="sec" id="sec-attendance">
   <div class="card">
     <div class="ct">✅ উপস্থিতির তালিকা</div>
-    <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:14px;padding:36px 20px;text-align:center;margin-bottom:14px">
+    <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:14px;padding:36px 20px;text-align:center">
       <div style="font-size:50px;margin-bottom:12px">📊</div>
       <div style="font-size:17px;font-weight:700;color:#166534;margin-bottom:6px">উপস্থিতি পরীক্ষা করুন</div>
       <div style="font-size:13px;color:#15803d;margin-bottom:20px">গুরুদয়াল সরকারি কলেজ — অফিসিয়াল সিস্টেম</div>
@@ -264,21 +259,16 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
       <div style="width:70px;height:70px;background:#1877f2;border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:34px;box-shadow:0 8px 24px rgba(24,119,242,.5)">📘</div>
       <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px">গণিত পরিবার</div>
       <div style="font-size:13px;color:#93c5fd;margin-bottom:20px">গুরুদয়াল সরকারি কলেজ, কিশোরগঞ্জ</div>
-      <div style="display:flex;justify-content:center;gap:22px;margin-bottom:22px">
-        <div style="text-align:center"><div style="font-size:20px">📢</div><div style="font-size:11px;color:#93c5fd;margin-top:3px">নিয়মিত আপডেট</div></div>
-        <div style="text-align:center"><div style="font-size:20px">🔔</div><div style="font-size:11px;color:#93c5fd;margin-top:3px">নোটিশ ও তথ্য</div></div>
-        <div style="text-align:center"><div style="font-size:20px">👥</div><div style="font-size:11px;color:#93c5fd;margin-top:3px">সকল শিক্ষার্থী</div></div>
-      </div>
       <a href="https://www.facebook.com/groups/1051364928348338" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#1877f2;color:#fff;text-decoration:none;border-radius:14px;padding:13px 28px;font-size:14px;font-weight:700;box-shadow:0 4px 20px rgba(24,119,242,.5)">📘 ফেসবুক গ্রুপে যোগ দিন</a>
     </div>
   </div>
   <div class="card">
     <div class="ct">💡 গ্রুপে কী পাবেন?</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px">
-      <div style="background:#eff6ff;border-radius:12px;padding:14px;border:1px solid #dbeafe"><div style="font-size:20px;margin-bottom:5px">📢</div><div style="font-size:13px;font-weight:700;color:#1e40af">বিভাগীয় নোটিশ</div><div style="font-size:12px;color:#64748b;margin-top:2px">গুরুত্বপূর্ণ ঘোষণা</div></div>
-      <div style="background:#f0fdf4;border-radius:12px;padding:14px;border:1px solid #bbf7d0"><div style="font-size:20px;margin-bottom:5px">📅</div><div style="font-size:13px;font-weight:700;color:#166534">পরীক্ষার আপডেট</div><div style="font-size:12px;color:#64748b;margin-top:2px">সময়সূচি ও তথ্য</div></div>
-      <div style="background:#fefce8;border-radius:12px;padding:14px;border:1px solid #fde047"><div style="font-size:20px;margin-bottom:5px">📚</div><div style="font-size:13px;font-weight:700;color:#854d0e">পড়াশোনার তথ্য</div><div style="font-size:12px;color:#64748b;margin-top:2px">নোট ও রিসোর্স</div></div>
-      <div style="background:#fdf4ff;border-radius:12px;padding:14px;border:1px solid #e9d5ff"><div style="font-size:20px;margin-bottom:5px">🎓</div><div style="font-size:13px;font-weight:700;color:#6d28d9">একাডেমিক তথ্য</div><div style="font-size:12px;color:#64748b;margin-top:2px">ক্লাস ও রুটিন</div></div>
+      <div style="background:#eff6ff;border-radius:12px;padding:14px;border:1px solid #dbeafe"><div style="font-size:20px;margin-bottom:5px">📢</div><div style="font-size:13px;font-weight:700;color:#1e40af">বিভাগীয় নোটিশ</div></div>
+      <div style="background:#f0fdf4;border-radius:12px;padding:14px;border:1px solid #bbf7d0"><div style="font-size:20px;margin-bottom:5px">📅</div><div style="font-size:13px;font-weight:700;color:#166534">পরীক্ষার আপডেট</div></div>
+      <div style="background:#fefce8;border-radius:12px;padding:14px;border:1px solid #fde047"><div style="font-size:20px;margin-bottom:5px">📚</div><div style="font-size:13px;font-weight:700;color:#854d0e">পড়াশোনার তথ্য</div></div>
+      <div style="background:#fdf4ff;border-radius:12px;padding:14px;border:1px solid #e9d5ff"><div style="font-size:20px;margin-bottom:5px">🎓</div><div style="font-size:13px;font-weight:700;color:#6d28d9">একাডেমিক তথ্য</div></div>
     </div>
   </div>
 </div>
@@ -304,6 +294,7 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
       <div class="atabs">
         <button class="atab on" onclick="setAT('an',this)">📢 নোটিশ</button>
         <button class="atab" onclick="setAT('ae',this)">📝 পরীক্ষা</button>
+        <button class="atab" onclick="setAT('ap',this)">🔬 প্র্যাকটিক্যাল</button>
         <button class="atab" onclick="setAT('aa',this)">📋 এসাইনমেন্ট</button>
         <button class="atab" onclick="setAT('at',this)">👨‍🏫 শিক্ষক</button>
         <button class="atab" onclick="setAT('ar',this)">📅 রুটিন</button>
@@ -328,6 +319,17 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
         <div class="fg"><label>সময়</label><input type="text" id="e-time" placeholder="যেমন: সকাল ১০টা – দুপুর ১টা"></div>
         <button class="pbtn" onclick="addExam()">+ যোগ করুন</button>
         <hr class="dv"><div id="ae-list"></div>
+      </div>
+
+      <div class="asec" id="ap">
+        <div class="fg"><label>বর্ষ</label><select id="p-year"><option value="1">১ম বর্ষ</option><option value="2">২য় বর্ষ</option><option value="3">৩য় বর্ষ</option><option value="4">৪র্থ বর্ষ</option><option value="5">মাস্টার্স</option></select></div>
+        <div class="fg"><label>ধরন</label><select id="p-type"><option value="class">🧪 প্র্যাকটিক্যাল ক্লাস</option><option value="exam">📊 প্র্যাকটিক্যাল পরীক্ষা</option></select></div>
+        <div class="fg"><label>বিষয়/শিরোনাম</label><input type="text" id="p-sub" placeholder="যেমন: ক্যালকুলাস ল্যাব"></div>
+        <div class="fg"><label>তারিখ</label><input type="date" id="p-date"></div>
+        <div class="fg"><label>সময়</label><input type="text" id="p-time" placeholder="যেমন: সকাল ১০টা"></div>
+        <div class="fg"><label>বিবরণ (ঐচ্ছিক)</label><textarea id="p-body" placeholder="বিস্তারিত তথ্য..."></textarea></div>
+        <button class="pbtn" onclick="addPractical()">+ যোগ করুন</button>
+        <hr class="dv"><div id="ap-list"></div>
       </div>
 
       <div class="asec" id="aa">
@@ -377,7 +379,7 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
     <div class="ct" style="justify-content:center;border:none;padding-bottom:4px">👤 ওয়েবসাইট নির্মাতা</div>
     <div style="padding:10px 0 20px">
       <div class="about-photo"><img id="about-main-img" src="" style="display:none"><span id="about-fb">শি</span></div>
-      <div style="font-size:21px;font-weight:800;color:var(--p);margin-bottom:4px">ফোজাইল আহমেদ শিহাব</div>
+      <div style="font-size:21px;font-weight:800;color:var(--p);margin-bottom:4px">ফোজাইল আহম্মেদ শিহাব</div>
       <span style="background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;font-size:11px;font-weight:700;padding:4px 16px;border-radius:20px;display:inline-block;margin-bottom:18px">ওয়েবসাইট নির্মাতা</span>
       <div style="background:var(--bg);border-radius:14px;padding:4px 0;margin-bottom:12px">
         <table style="width:100%;border-collapse:collapse;text-align:left">
@@ -387,7 +389,6 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
           <tr><td style="padding:10px;font-size:11px;color:var(--muted);font-weight:700">🏫 কলেজ</td><td style="padding:10px;font-size:13px;font-weight:600">গুরুদয়াল সরকারি কলেজ</td></tr>
         </table>
       </div>
-      <div style="font-size:12px;color:var(--muted);padding:12px;background:var(--bg);border-radius:10px;line-height:1.7">এই ওয়েবসাইটটি গণিত বিভাগের সকল শিক্ষার্থীদের সুবিধার কথা ভেবে তৈরি করা হয়েছে।</div>
     </div>
   </div>
 </div>
@@ -399,8 +400,8 @@ main{max-width:940px;margin:0 auto;padding:20px 14px}
 var PASS='math2024';
 var BIN_ID='69f5ceadaaba882197617a71';
 var API_KEY='$2a$10$QNtMj664gTklVoGUE4J.Ru2gsa02iSrPZNvj8Gexu2cLE80OX1kdG';
-var D={notices:[],exams:[],teachers:[],assigns:[],routines:[{},{},{},{},{}]};
-var eYear=1,eType='final',aYear=1;
+var D={notices:[],exams:[],teachers:[],assigns:[],practicals:[],routines:[{},{},{},{},{}]};
+var eYear=1,eType='final',aYear=1,pYear=1,pType='class';
 var MS=['জানু','ফেব্রু','মার্চ','এপ্রি','মে','জুন','জুলা','আগ','সেপ','অক্টো','নভে','ডিসে'];
 var YN=['','১ম','২য়','৩য়','৪র্থ','মাস্টার্স'];
 var TN={final:'ফাইনাল',incourse:'ইনকোর্স',classtest:'ক্লাস টেস্ট'};
@@ -408,25 +409,34 @@ var TL={final:'📋 ফাইনাল',incourse:'📌 ইনকোর্স',cl
 var TC={final:'#dbeafe',incourse:'#ede9fe',classtest:'#fef9c3'};
 var TCT={final:'#1e40af',incourse:'#6d28d9',classtest:'#92400e'};
 
-function showLoad(m){var e=document.getElementById('load-msg');if(e){e.textContent=m||'লোড হচ্ছে...';e.style.display='block';}}
+function showLoad(m){var e=document.getElementById('load-msg');if(e){e.textContent=m;e.style.display='block';}}
 function hideLoad(){var e=document.getElementById('load-msg');if(e)e.style.display='none';}
 
 function save(){
   showLoad('সেভ হচ্ছে...');
-  fetch('https://api.jsonbin.io/v3/b/'+BIN_ID,{
-    method:'PUT',
-    headers:{'Content-Type':'application/json','X-Master-Key':API_KEY},
-    body:JSON.stringify(D)
-  }).then(function(){hideLoad();}).catch(function(e){console.error(e);hideLoad();});
+  localStorage.setItem('gmc_cache',JSON.stringify(D));
+  fetch('https://api.jsonbin.io/v3/b/'+BIN_ID,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':API_KEY,'X-Bin-Meta':false},body:JSON.stringify(D)})
+  .then(function(){hideLoad();}).catch(function(){hideLoad();});
 }
 
 function loadData(){
   showLoad('ডেটা লোড হচ্ছে...');
-  fetch('https://api.jsonbin.io/v3/b/'+BIN_ID+'/latest',{
-    headers:{'X-Master-Key':API_KEY}
-  }).then(function(r){return r.json();})
-  .then(function(j){if(j&&j.record)D=j.record;hideLoad();renderAll();})
-  .catch(function(e){console.error(e);hideLoad();renderAll();});
+  fetch('https://api.jsonbin.io/v3/b/'+BIN_ID+'/latest',{headers:{'X-Master-Key':API_KEY}})
+  .then(function(r){return r.json();})
+  .then(function(j){if(j&&j.record){D=j.record;if(!D.practicals)D.practicals=[];}hideLoad();// MATH BG
+var formulas=['∫f(x)dx','π ≈ 3.14159','∑xᵢ','√(a²+b²)','sin²θ+cos²θ=1','e^(iπ)+1=0','ax²+bx+c=0','x=(-b±√(b²-4ac))/2a','d/dx(xⁿ)=nxⁿ⁻¹','∫xⁿdx=xⁿ⁺¹/(n+1)','lim(x→∞)','∇·F=0','∂f/∂x','P(A∪B)=P(A)+P(B)-P(A∩B)','A=πr²','V=4πr³/3','F=ma','E=mc²','log(ab)=log a+log b','sin(A+B)=sinA·cosB+cosA·sinB','n!=n·(n-1)!','ℝ ℤ ℕ ℚ','∀x∈ℝ','∃x: f(x)=0','det(AB)=det(A)·det(B)','∮F·ds','Δy/Δx','f\'(x)=lim(h→0)','aⁿ·aᵐ=aⁿ⁺ᵐ','(a+b)²=a²+2ab+b²','(a-b)²=a²-2ab+b²','a²-b²=(a+b)(a-b)','logₐ(xⁿ)=n·logₐx','tan θ=sin θ/cos θ','cot θ=cos θ/sin θ','sec θ=1/cos θ','cosec θ=1/sin θ'];
+var bgEl=document.getElementById('math-bg');
+if(bgEl){
+  var txt='';
+  for(var ri=0;ri<60;ri++){
+    for(var ci=0;ci<8;ci++) txt+=formulas[Math.floor(Math.random()*formulas.length)]+'    ';
+    txt+='\n';
+  }
+  bgEl.textContent=txt;
+}
+
+renderAll();})
+  .catch(function(){hideLoad();renderAll();});
 }
 
 function go(id,btn){
@@ -440,91 +450,37 @@ function go(id,btn){
 function setEY(y){eYear=y;document.querySelectorAll('[id^="etab-"]').forEach(function(b){b.classList.remove('on');});var e=document.getElementById('etab-'+y);if(e)e.classList.add('on');renderExams();}
 function setET(t){eType=t;document.querySelectorAll('[id^="etype-"]').forEach(function(b){b.classList.remove('on');});var e=document.getElementById('etype-'+t);if(e)e.classList.add('on');renderExams();}
 function setAY(y){aYear=y;document.querySelectorAll('[id^="astab-"]').forEach(function(b){b.classList.remove('on');});var e=document.getElementById('astab-'+y);if(e)e.classList.add('on');renderAssigns();}
+function setPY(y){pYear=y;document.querySelectorAll('[id^="ptab-"]').forEach(function(b){b.classList.remove('on');});var e=document.getElementById('ptab-'+y);if(e)e.classList.add('on');renderPracticals();}
+function setPT(t){pType=t;document.querySelectorAll('[id^="ptype-"]').forEach(function(b){b.classList.remove('on');});var e=document.getElementById('ptype-'+t);if(e)e.classList.add('on');renderPracticals();}
 function setAT(id,btn){document.querySelectorAll('.asec').forEach(function(s){s.classList.remove('on');});document.querySelectorAll('.atab').forEach(function(b){b.classList.remove('on');});var e=document.getElementById(id);if(e)e.classList.add('on');if(btn)btn.classList.add('on');if(id==='ar')renderRoutineAdmin();}
 
-/* TODAY UPDATES */
+/* TODAY */
 function renderToday(){
   var el=document.getElementById('today-updates');
-  var dateEl=document.getElementById('today-date');
+  var de=document.getElementById('today-date');
   if(!el)return;
   var now=new Date();
-  var todayStr=now.toISOString().split('T')[0];
-  if(dateEl)dateEl.textContent=now.getDate()+' '+MS[now.getMonth()]+', '+now.getFullYear();
+  var ts=now.toISOString().split('T')[0];
+  if(de)de.textContent=now.getDate()+' '+MS[now.getMonth()]+', '+now.getFullYear();
   var items=[];
-
-  // আজকের পরীক্ষা
   (D.exams||[]).forEach(function(e){
-    if(e.date===todayStr){
-      items.push('<div class="today-card exam-c">'+
-        '<div class="tc-icon">📝</div>'+
-        '<div class="tc-type">পরীক্ষা আজ — '+YN[e.year]+' বর্ষ</div>'+
-        '<div class="tc-title">'+e.sub+'</div>'+
-        '<div class="tc-sub">⏰ '+(e.time||'সময় নির্ধারিত হয়নি')+'</div>'+
-      '</div>');
-    }
+    if(e.date===ts) items.push('<div class="today-card exam-c"><div class="tc-icon">📝</div><div class="tc-type">পরীক্ষা আজ — '+YN[e.year]+' বর্ষ</div><div class="tc-title">'+e.sub+'</div><div class="tc-sub">⏰ '+(e.time||'')+'</div></div>');
   });
-
-  // আজ ডেডলাইন এসাইনমেন্ট
+  (D.practicals||[]).forEach(function(p){
+    if(p.date===ts) items.push('<div class="today-card practical-c"><div class="tc-icon">'+(p.type==='exam'?'📊':'🧪')+'</div><div class="tc-type">'+(p.type==='exam'?'প্র্যাকটিক্যাল পরীক্ষা':'প্র্যাকটিক্যাল ক্লাস')+' — '+YN[p.year]+' বর্ষ</div><div class="tc-title">'+p.sub+'</div><div class="tc-sub">⏰ '+(p.time||'')+'</div></div>');
+  });
   (D.assigns||[]).forEach(function(a){
-    if(a.deadline===todayStr){
-      items.push('<div class="today-card assign-c">'+
-        '<div class="tc-icon">📋</div>'+
-        '<div class="tc-type">এসাইনমেন্ট জমা আজ — '+YN[a.year]+' বর্ষ</div>'+
-        '<div class="tc-title">'+a.title+'</div>'+
-        '<div class="tc-sub">📚 '+(a.subject||'')+'</div>'+
-      '</div>');
-    }
+    if(a.deadline===ts) items.push('<div class="today-card assign-c"><div class="tc-icon">📋</div><div class="tc-type">জমার শেষ দিন — '+YN[a.year]+' বর্ষ</div><div class="tc-title">'+a.title+'</div><div class="tc-sub">📚 '+(a.subject||'')+'</div></div>');
   });
-
-  // আসন্ন পরীক্ষা (৩ দিনের মধ্যে)
-  (D.exams||[]).forEach(function(e){
-    var d=new Date(e.date);
-    var diff=(d-now)/(1000*60*60*24);
-    if(diff>0&&diff<=3){
-      items.push('<div class="today-card exam-c">'+
-        '<div class="tc-icon">⚠️</div>'+
-        '<div class="tc-type">আসন্ন পরীক্ষা — '+YN[e.year]+' বর্ষ</div>'+
-        '<div class="tc-title">'+e.sub+'</div>'+
-        '<div class="tc-sub">📅 '+e.date+' | ⏰ '+(e.time||'')+'</div>'+
-      '</div>');
-    }
-  });
-
-  // আসন্ন ডেডলাইন (৩ দিনের মধ্যে)
-  (D.assigns||[]).forEach(function(a){
-    if(!a.deadline)return;
-    var d=new Date(a.deadline);
-    var diff=(d-now)/(1000*60*60*24);
-    if(diff>0&&diff<=3){
-      items.push('<div class="today-card assign-c">'+
-        '<div class="tc-icon">⏳</div>'+
-        '<div class="tc-type">ডেডলাইন আসছে — '+YN[a.year]+' বর্ষ</div>'+
-        '<div class="tc-title">'+a.title+'</div>'+
-        '<div class="tc-sub">জমার তারিখ: '+a.deadline+'</div>'+
-      '</div>');
-    }
-  });
-
-  // সর্বশেষ নোটিশ (সর্বোচ্চ ২টা)
-  var recent=(D.notices||[]).slice(-2).reverse();
-  recent.forEach(function(n){
-    items.push('<div class="today-card notice-c">'+
-      '<div class="tc-icon">📢</div>'+
-      '<div class="tc-type">নোটিশ</div>'+
-      '<div class="tc-title">'+n.title+'</div>'+
-      '<div class="tc-sub">'+n.date+'</div>'+
-    '</div>');
-  });
-
+  (D.exams||[]).forEach(function(e){var d=new Date(e.date),df=(d-now)/86400000;if(df>0&&df<=3)items.push('<div class="today-card exam-c"><div class="tc-icon">⚠️</div><div class="tc-type">আসন্ন পরীক্ষা — '+YN[e.year]+' বর্ষ</div><div class="tc-title">'+e.sub+'</div><div class="tc-sub">📅 '+e.date+'</div></div>');});
+  (D.practicals||[]).forEach(function(p){var d=new Date(p.date),df=(d-now)/86400000;if(df>0&&df<=3)items.push('<div class="today-card practical-c"><div class="tc-icon">⏳</div><div class="tc-type">আসন্ন '+(p.type==='exam'?'প্র্যাকটিক্যাল পরীক্ষা':'প্র্যাকটিক্যাল ক্লাস')+'</div><div class="tc-title">'+p.sub+'</div><div class="tc-sub">📅 '+p.date+'</div></div>');});
+  (D.assigns||[]).forEach(function(a){if(!a.deadline)return;var d=new Date(a.deadline),df=(d-now)/86400000;if(df>0&&df<=3)items.push('<div class="today-card assign-c"><div class="tc-icon">⏳</div><div class="tc-type">ডেডলাইন আসছে</div><div class="tc-title">'+a.title+'</div><div class="tc-sub">'+a.deadline+'</div></div>');});
   el.innerHTML=items.length?'<div class="today-grid">'+items.join('')+'</div>':'<div class="empty">আজকের কোনো আপডেট নেই</div>';
 }
 
 /* STATS */
 function renderStats(){
-  var sn=document.getElementById('stat-notice');
-  var se=document.getElementById('stat-exam');
-  var sa=document.getElementById('stat-assign');
-  var st=document.getElementById('stat-teacher');
+  var sn=document.getElementById('stat-notice'),se=document.getElementById('stat-exam'),sa=document.getElementById('stat-assign'),st=document.getElementById('stat-teacher');
   if(sn)sn.textContent=(D.notices||[]).length;
   if(se)se.textContent=(D.exams||[]).length;
   if(sa)sa.textContent=(D.assigns||[]).length;
@@ -533,43 +489,37 @@ function renderStats(){
 
 /* NOTICES */
 function addNotice(){
-  var t=document.getElementById('n-title').value.trim();
-  if(!t){alert('শিরোনাম দিন');return;}
-  var b=document.getElementById('n-body').value.trim();
-  var tp=document.getElementById('n-type').value;
+  var t=document.getElementById('n-title').value.trim();if(!t){alert('শিরোনাম দিন');return;}
   if(!D.notices)D.notices=[];
-  D.notices.push({title:t,body:b,type:tp,date:new Date().toLocaleDateString('bn-BD')});
+  D.notices.push({title:t,body:document.getElementById('n-body').value.trim(),type:document.getElementById('n-type').value,date:new Date().toLocaleDateString('bn-BD')});
   save();renderNotices();
   document.getElementById('n-title').value='';document.getElementById('n-body').value='';document.getElementById('n-type').value='';
 }
 function delNotice(i){if(confirm('মুছে ফেলবেন?')){D.notices.splice(i,1);save();renderNotices();}}
 function renderNotices(){
-  var nl=document.getElementById('notice-list');
-  var hl=document.getElementById('home-notices');
-  var al=document.getElementById('an-list');
-  if(!(D.notices||[]).length){
+  var nl=document.getElementById('notice-list'),hl=document.getElementById('home-notices'),al=document.getElementById('an-list');
+  if(!(D.notices||[]).length&&!(D.practicals||[]).length){
     if(nl)nl.innerHTML='<div class="empty">কোনো নোটিশ নেই</div>';
     if(hl)hl.innerHTML='<div class="empty">কোনো নোটিশ নেই</div>';
     if(al)al.innerHTML='';updateTicker();return;
   }
-  var sorted=D.notices.slice().reverse();
-  function h(n){return '<div class="ni '+(n.type==='জরুরি'?'urg':n.type==='নতুন'?'nw':'')+'">'+
-    '<div class="ntl">'+n.title+(n.type?'<span class="badge '+(n.type==='জরুরি'?'br':'bg2')+'">'+n.type+'</span>':'')+
-    '</div><div class="nm">📅 '+n.date+'</div>'+(n.body?'<div class="nb">'+n.body+'</div>':'')+
+  var sorted=(D.notices||[]).slice().reverse();
+  function nh(n){return '<div class="ni '+(n.type==='জরুরি'?'urg':n.type==='নতুন'?'nw':'')+'"><div class="ntl">'+n.title+(n.type?'<span class="badge '+(n.type==='জরুরি'?'br':'bg2')+'">'+n.type+'</span>':'')+
+  '</div><div class="nm">📅 '+n.date+'</div>'+(n.body?'<div class="nb">'+n.body+'</div>':'')+
   '</div>';}
-  if(nl)nl.innerHTML=sorted.map(h).join('');
-  if(hl)hl.innerHTML=sorted.slice(0,3).map(h).join('');
-  if(al)al.innerHTML=D.notices.map(function(n,i){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)">'+
-      '<span style="font-size:13px">'+n.title+'</span><button class="dbtn" onclick="delNotice('+i+')">মুছুন</button></div>';
-  }).join('');
+  // প্র্যাকটিক্যাল কার্ড হোম
+  var pRecent=(D.practicals||[]).slice().reverse().slice(0,2);
+  function ph(p){return '<div class="ni prac"><div class="ntl">'+(p.type==='exam'?'📊':'🧪')+' '+p.sub+'<span class="badge bpr">'+(p.type==='exam'?'প্র্যাকটিক্যাল পরীক্ষা':'প্র্যাকটিক্যাল ক্লাস')+'</span></div><div class="nm">'+YN[p.year]+' বর্ষ | 📅 '+p.date+(p.time?' | ⏰ '+p.time:'')+'</div>'+(p.body?'<div class="nb">'+p.body+'</div>':'')+
+  '</div>';}
+  if(nl)nl.innerHTML=sorted.map(nh).join('');
+  if(hl){var homeItems=sorted.slice(0,3).map(nh).concat(pRecent.map(ph));hl.innerHTML=homeItems.join('');}
+  if(al)al.innerHTML=(D.notices||[]).map(function(n,i){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)"><span style="font-size:13px">'+n.title+'</span><button class="dbtn" onclick="delNotice('+i+')">মুছুন</button></div>';}).join('');
   updateTicker();
 }
 
 /* EXAMS */
 function addExam(){
-  var yr=document.getElementById('e-year').value,tp=document.getElementById('e-type').value;
-  var sb=document.getElementById('e-sub').value.trim(),dt=document.getElementById('e-date').value,tm=document.getElementById('e-time').value.trim();
+  var yr=document.getElementById('e-year').value,tp=document.getElementById('e-type').value,sb=document.getElementById('e-sub').value.trim(),dt=document.getElementById('e-date').value,tm=document.getElementById('e-time').value.trim();
   if(!sb||!dt){alert('বিষয় ও তারিখ দিন');return;}
   if(!D.exams)D.exams=[];
   D.exams.push({year:yr,type:tp,sub:sb,date:dt,time:tm});save();renderExams();renderExamAdmin();
@@ -581,31 +531,41 @@ function renderExams(){
   var f=(D.exams||[]).filter(function(e){return String(e.year)===String(eYear)&&(e.type||'final')===eType;});
   if(!f.length){l.innerHTML='<div class="empty">এই বর্ষের কোনো সময়সূচি নেই</div>';return;}
   f.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
-  l.innerHTML=f.map(function(e){
-    var d=new Date(e.date);
-    return '<div class="ei"><div class="edt"><div class="dy">'+d.getDate()+'</div><div class="mo">'+MS[d.getMonth()]+'</div></div>'+
-      '<div><div style="font-size:14px;font-weight:600">'+e.sub+'</div>'+
-      '<div style="font-size:12px;color:var(--muted);margin-top:3px">⏰ '+(e.time||'সময় নির্ধারিত হয়নি')+'</div>'+
-      '<span style="font-size:10px;margin-top:4px;display:inline-block;padding:2px 8px;border-radius:10px;font-weight:700;background:'+TC[e.type||'final']+';color:'+TCT[e.type||'final']+'">'+TL[e.type||'final']+'</span>'+
-    '</div></div>';
-  }).join('');
+  l.innerHTML=f.map(function(e){var d=new Date(e.date);return '<div class="ei"><div class="edt"><div class="dy">'+d.getDate()+'</div><div class="mo">'+MS[d.getMonth()]+'</div></div><div><div style="font-size:14px;font-weight:600">'+e.sub+'</div><div style="font-size:12px;color:var(--muted);margin-top:3px">⏰ '+(e.time||'সময় নির্ধারিত হয়নি')+'</div><span style="font-size:10px;margin-top:4px;display:inline-block;padding:2px 8px;border-radius:10px;font-weight:700;background:'+TC[e.type||'final']+';color:'+TCT[e.type||'final']+'">'+TL[e.type||'final']+'</span></div></div>';}).join('');
 }
 function renderExamAdmin(){
   var al=document.getElementById('ae-list');if(!al)return;
-  al.innerHTML=(D.exams||[]).map(function(e,i){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)">'+
-      '<span style="font-size:13px">['+YN[e.year]+']['+TN[e.type||'final']+'] '+e.sub+' — '+e.date+'</span>'+
-      '<button class="dbtn" onclick="delExam('+i+')">মুছুন</button></div>';
-  }).join('');
+  al.innerHTML=(D.exams||[]).map(function(e,i){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)"><span style="font-size:12px">['+YN[e.year]+']['+TN[e.type||'final']+'] '+e.sub+' — '+e.date+'</span><button class="dbtn" onclick="delExam('+i+')">মুছুন</button></div>';}).join('');
+}
+
+/* PRACTICALS */
+function addPractical(){
+  var yr=document.getElementById('p-year').value,tp=document.getElementById('p-type').value,sb=document.getElementById('p-sub').value.trim(),dt=document.getElementById('p-date').value,tm=document.getElementById('p-time').value.trim(),bd=document.getElementById('p-body').value.trim();
+  if(!sb||!dt){alert('বিষয় ও তারিখ দিন');return;}
+  if(!D.practicals)D.practicals=[];
+  D.practicals.push({year:yr,type:tp,sub:sb,date:dt,time:tm,body:bd});save();renderPracticals();renderPracticalAdmin();renderNotices();
+  document.getElementById('p-sub').value='';document.getElementById('p-date').value='';document.getElementById('p-time').value='';document.getElementById('p-body').value='';
+}
+function delPractical(i){if(confirm('মুছে ফেলবেন?')){D.practicals.splice(i,1);save();renderPracticals();renderPracticalAdmin();renderNotices();}}
+function renderPracticals(){
+  var l=document.getElementById('practical-list');if(!l)return;
+  var f=(D.practicals||[]).filter(function(p){return String(p.year)===String(pYear)&&p.type===pType;});
+  if(!f.length){l.innerHTML='<div class="empty">এই বর্ষের কোনো প্র্যাকটিক্যাল তথ্য নেই</div>';return;}
+  f.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+  l.innerHTML=f.map(function(p){var d=new Date(p.date);return '<div class="ei"><div class="edt" style="background:linear-gradient(135deg,#059669,#10b981)"><div class="dy">'+d.getDate()+'</div><div class="mo">'+MS[d.getMonth()]+'</div></div><div><div style="font-size:14px;font-weight:600">'+p.sub+'</div><div style="font-size:12px;color:var(--muted);margin-top:3px">⏰ '+(p.time||'সময় নির্ধারিত হয়নি')+'</div>'+(p.body?'<div style="font-size:12px;color:#475569;margin-top:5px">'+p.body+'</div>':'')+
+  '<span style="font-size:10px;margin-top:4px;display:inline-block;padding:2px 8px;border-radius:10px;font-weight:700;background:#dcfce7;color:#166534">'+(p.type==='exam'?'📊 প্র্যাকটিক্যাল পরীক্ষা':'🧪 প্র্যাকটিক্যাল ক্লাস')+'</span></div></div>';}).join('');
+}
+function renderPracticalAdmin(){
+  var al=document.getElementById('ap-list');if(!al)return;
+  al.innerHTML=(D.practicals||[]).map(function(p,i){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)"><span style="font-size:12px">['+YN[p.year]+']['+(p.type==='exam'?'পরীক্ষা':'ক্লাস')+'] '+p.sub+' — '+p.date+'</span><button class="dbtn" onclick="delPractical('+i+')">মুছুন</button></div>';}).join('');
 }
 
 /* ASSIGNS */
 function addAssign(){
   var yr=document.getElementById('as-year').value,tl=document.getElementById('as-title').value.trim();
   if(!tl){alert('শিরোনাম দিন');return;}
-  var sb=document.getElementById('as-subject').value.trim(),bd=document.getElementById('as-body').value.trim(),dl=document.getElementById('as-deadline').value;
   if(!D.assigns)D.assigns=[];
-  D.assigns.push({year:yr,title:tl,subject:sb,body:bd,deadline:dl,date:new Date().toLocaleDateString('bn-BD')});
+  D.assigns.push({year:yr,title:tl,subject:document.getElementById('as-subject').value.trim(),body:document.getElementById('as-body').value.trim(),deadline:document.getElementById('as-deadline').value,date:new Date().toLocaleDateString('bn-BD')});
   save();renderAssigns();renderAssignAdmin();
   document.getElementById('as-title').value='';document.getElementById('as-subject').value='';document.getElementById('as-body').value='';document.getElementById('as-deadline').value='';
 }
@@ -615,49 +575,32 @@ function renderAssigns(){
   var f=(D.assigns||[]).filter(function(a){return String(a.year)===String(aYear);});
   if(!f.length){l.innerHTML='<div class="empty">এই বর্ষের কোনো এসাইনমেন্ট নেই</div>';return;}
   l.innerHTML=f.slice().reverse().map(function(a){
-    var d=a.deadline?new Date(a.deadline):null;
-    var ds=d?d.getDate()+' '+MS[d.getMonth()]+', '+d.getFullYear():'';
-    var near=d&&(d-new Date())<3*86400000&&d>new Date();
-    var past=d&&d<new Date();
-    return '<div style="border:1px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:9px;background:#fff">'+
-      '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:7px">'+
-      '<div><div style="font-size:14px;font-weight:700">'+a.title+'</div>'+
-      (a.subject?'<div style="font-size:12px;color:var(--pl);margin-top:2px;font-weight:600">📚 '+a.subject+'</div>':'')+
-      '</div>'+(ds?'<span style="font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;background:'+(past?'#fef2f2':near?'#fffbeb':'#f0fdf4')+';color:'+(past?'#dc2626':near?'#d97706':'#16a34a')+'">⏰ '+ds+'</span>':'')+
-      '</div>'+(a.body?'<div style="font-size:13px;color:#475569;margin-top:9px;line-height:1.7;background:var(--bg);padding:9px;border-radius:8px">'+a.body+'</div>':'')+
-      '<div style="font-size:11px;color:var(--muted);margin-top:7px">📅 পোস্ট: '+a.date+'</div></div>';
+    var d=a.deadline?new Date(a.deadline):null,ds=d?d.getDate()+' '+MS[d.getMonth()]:'',near=d&&(d-new Date())<3*86400000&&d>new Date(),past=d&&d<new Date();
+    return '<div style="border:1px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:9px;background:rgba(255,255,255,.9)"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:7px"><div><div style="font-size:14px;font-weight:700">'+a.title+'</div>'+(a.subject?'<div style="font-size:12px;color:var(--pl);margin-top:2px;font-weight:600">📚 '+a.subject+'</div>':'')+
+    '</div>'+(ds?'<span style="font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;background:'+(past?'#fef2f2':near?'#fffbeb':'#f0fdf4')+';color:'+(past?'#dc2626':near?'#d97706':'#16a34a')+'">⏰ '+ds+'</span>':'')+
+    '</div>'+(a.body?'<div style="font-size:13px;color:#475569;margin-top:9px;line-height:1.7;background:var(--bg);padding:9px;border-radius:8px">'+a.body+'</div>':'')+
+    '<div style="font-size:11px;color:var(--muted);margin-top:7px">📅 পোস্ট: '+a.date+'</div></div>';
   }).join('');
 }
 function renderAssignAdmin(){
   var al=document.getElementById('aa-list');if(!al)return;
-  al.innerHTML=(D.assigns||[]).map(function(a,i){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)">'+
-      '<span style="font-size:13px">['+YN[a.year]+'] '+a.title+'</span><button class="dbtn" onclick="delAssign('+i+')">মুছুন</button></div>';
-  }).join('');
+  al.innerHTML=(D.assigns||[]).map(function(a,i){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)"><span style="font-size:13px">['+YN[a.year]+'] '+a.title+'</span><button class="dbtn" onclick="delAssign('+i+')">মুছুন</button></div>';}).join('');
 }
 
 /* TEACHERS */
 function addTeacher(){
   var n=document.getElementById('t-name').value.trim();if(!n){alert('নাম দিন');return;}
-  var s=document.getElementById('t-sub').value.trim(),p=document.getElementById('t-phone').value.trim();
-  D.teachers.push({name:n,sub:s,phone:p});save();renderTeachers();
+  D.teachers.push({name:n,sub:document.getElementById('t-sub').value.trim(),phone:document.getElementById('t-phone').value.trim()});
+  save();renderTeachers();
   document.getElementById('t-name').value='';document.getElementById('t-sub').value='';document.getElementById('t-phone').value='';
 }
 function delTeacher(i){if(confirm('মুছে ফেলবেন?')){D.teachers.splice(i,1);save();renderTeachers();}}
 function renderTeachers(){
   var l=document.getElementById('teacher-list'),al=document.getElementById('at-list');
   if(!(D.teachers||[]).length){if(l)l.innerHTML='<div class="empty" style="grid-column:1/-1">কোনো শিক্ষকের তথ্য নেই</div>';if(al)al.innerHTML='';return;}
-  if(l)l.innerHTML=D.teachers.map(function(t){
-    return '<div class="tc2"><div class="av">'+t.name.charAt(0)+'</div>'+
-      '<div style="font-size:13px;font-weight:700">'+t.name+'</div>'+
-      '<div style="font-size:11px;color:var(--muted);margin-top:3px">'+t.sub+'</div>'+
-      (t.phone?'<div style="font-size:11px;color:var(--pl);margin-top:5px">📞 '+t.phone+'</div>':'')+
-    '</div>';
-  }).join('');
-  if(al)al.innerHTML=D.teachers.map(function(t,i){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)">'+
-      '<span style="font-size:13px">'+t.name+' — '+t.sub+'</span><button class="dbtn" onclick="delTeacher('+i+')">মুছুন</button></div>';
-  }).join('');
+  if(l)l.innerHTML=D.teachers.map(function(t){return '<div class="tc2"><div class="av">'+t.name.charAt(0)+'</div><div style="font-size:13px;font-weight:700">'+t.name+'</div><div style="font-size:11px;color:var(--muted);margin-top:3px">'+t.sub+'</div>'+(t.phone?'<div style="font-size:11px;color:var(--pl);margin-top:5px">📞 '+t.phone+'</div>':'')+
+  '</div>';}).join('');
+  if(al)al.innerHTML=D.teachers.map(function(t,i){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bg)"><span style="font-size:13px">'+t.name+' — '+t.sub+'</span><button class="dbtn" onclick="delTeacher('+i+')">মুছুন</button></div>';}).join('');
 }
 
 /* ROUTINE */
@@ -665,37 +608,15 @@ function renderRoutineAdmin(){
   var c=document.getElementById('ar-list');if(!c)return;
   var labs=['১ম বর্ষ','২য় বর্ষ','৩য় বর্ষ','৪র্থ বর্ষ','মাস্টার্স'];
   var html='';
-  for(var i=0;i<5;i++){
-    var r=(D.routines||[])[i]||{};
-    html+='<div style="border:1px solid var(--bd);border-radius:12px;padding:15px;margin-bottom:11px">'+
-      '<div style="font-size:13px;font-weight:700;color:var(--p);margin-bottom:9px">'+labs[i]+'</div>'+
-      '<div class="fg" style="margin-bottom:7px"><label>ক্যাপশন</label><input type="text" id="rc-'+i+'" value="'+(r.caption||'')+'" placeholder="যেমন: অনার্স '+(i+1)+'ম বর্ষের রুটিন"></div>'+
-      '<div class="fg" style="margin-bottom:7px"><label>রুটিনের ছবি</label><input type="file" id="rf-'+i+'" accept="image/*" onchange="prvRoutine(event,'+i+')"></div>'+
-      '<div id="rp-'+i+'" style="'+(r.img?'':'display:none;')+'margin-bottom:7px"><img src="'+(r.img||'')+'" style="max-width:100%;max-height:90px;border-radius:8px;border:1px solid var(--bd)"></div>'+
-      '<div style="display:flex;gap:8px">'+
-      '<button class="pbtn" style="font-size:12px;padding:7px 13px" onclick="saveRoutine('+i+')">সেভ করুন</button>'+
-      (r.img?'<button class="dbtn" onclick="delRoutine('+i+')">মুছুন</button>':'')+
-      '</div></div>';
-  }
+  for(var i=0;i<5;i++){var r=(D.routines||[])[i]||{};html+='<div style="border:1px solid var(--bd);border-radius:12px;padding:15px;margin-bottom:11px"><div style="font-size:13px;font-weight:700;color:var(--p);margin-bottom:9px">'+labs[i]+'</div><div class="fg" style="margin-bottom:7px"><label>ক্যাপশন</label><input type="text" id="rc-'+i+'" value="'+(r.caption||'')+'" placeholder="ক্যাপশন"></div><div class="fg" style="margin-bottom:7px"><label>রুটিনের ছবি</label><input type="file" id="rf-'+i+'" accept="image/*" onchange="prvRoutine(event,'+i+')"></div><div id="rp-'+i+'" style="'+(r.img?'':'display:none;')+'margin-bottom:7px"><img src="'+(r.img||'')+'" style="max-width:100%;max-height:90px;border-radius:8px;border:1px solid var(--bd)"></div><div style="display:flex;gap:8px"><button class="pbtn" style="font-size:12px;padding:7px 13px" onclick="saveRoutine('+i+')">সেভ করুন</button>'+(r.img?'<button class="dbtn" onclick="delRoutine('+i+')">মুছুন</button>':'')+
+  '</div></div>';}
   c.innerHTML=html;
 }
-function prvRoutine(e,i){
-  var file=e.target.files[0];if(!file)return;
-  var r=new FileReader();
-  r.onload=function(ev){var p=document.getElementById('rp-'+i);p.innerHTML='<img src="'+ev.target.result+'" style="max-width:100%;max-height:90px;border-radius:8px;border:1px solid var(--bd)">';p.style.display='block';};
-  r.readAsDataURL(file);
-}
-function saveRoutine(i){
-  var cap=document.getElementById('rc-'+i).value.trim();
-  var file=document.getElementById('rf-'+i).files[0];
-  if(!D.routines)D.routines=[{},{},{},{},{}];
-  if(file){var r=new FileReader();r.onload=function(ev){D.routines[i]={caption:cap,img:ev.target.result};save();renderRoutineView();renderRoutineAdmin();alert('সেভ হয়েছে!');};r.readAsDataURL(file);}
-  else{D.routines[i]=Object.assign({},D.routines[i]||{},{caption:cap});save();renderRoutineView();renderRoutineAdmin();alert('ক্যাপশন সেভ হয়েছে!');}
-}
+function prvRoutine(e,i){var file=e.target.files[0];if(!file)return;var r=new FileReader();r.onload=function(ev){var p=document.getElementById('rp-'+i);p.innerHTML='<img src="'+ev.target.result+'" style="max-width:100%;max-height:90px;border-radius:8px;border:1px solid var(--bd)">';p.style.display='block';};r.readAsDataURL(file);}
+function saveRoutine(i){var cap=document.getElementById('rc-'+i).value.trim(),file=document.getElementById('rf-'+i).files[0];if(!D.routines)D.routines=[{},{},{},{},{}];if(file){var r=new FileReader();r.onload=function(ev){D.routines[i]={caption:cap,img:ev.target.result};save();renderRoutineView();renderRoutineAdmin();alert('সেভ হয়েছে!');};r.readAsDataURL(file);}else{D.routines[i]=Object.assign({},D.routines[i]||{},{caption:cap});save();renderRoutineView();renderRoutineAdmin();alert('সেভ হয়েছে!');}}
 function delRoutine(i){if(confirm('মুছে ফেলবেন?')){D.routines[i]={};save();renderRoutineView();renderRoutineAdmin();}}
 function renderRoutineView(){
-  var tabs=document.getElementById('rtabs'),cnt=document.getElementById('rcontent');
-  if(!tabs||!cnt)return;
+  var tabs=document.getElementById('rtabs'),cnt=document.getElementById('rcontent');if(!tabs||!cnt)return;
   var list=(D.routines||[]).filter(function(r){return r&&r.img;});
   if(!list.length){tabs.innerHTML='';cnt.innerHTML='<div class="empty">রুটিন এখনো যোগ করা হয়নি</div>';return;}
   tabs.innerHTML=list.map(function(r,i){return '<button class="ytab'+(i===0?' on':'')+'" id="rtab-'+i+'" onclick="showRoutine('+i+')">'+(r.caption||'বর্ষ '+(i+1))+'</button>';}).join('');
@@ -705,10 +626,7 @@ function showRoutine(idx){
   var list=(D.routines||[]).filter(function(r){return r&&r.img;});
   document.querySelectorAll('[id^="rtab-"]').forEach(function(b,i){if(i===idx)b.classList.add('on');else b.classList.remove('on');});
   var r=list[idx];
-  document.getElementById('rcontent').innerHTML=r?
-    '<img src="'+r.img+'" style="max-width:100%;border-radius:12px;border:1px solid var(--bd);display:block;margin:0 auto;box-shadow:0 2px 10px rgba(0,0,0,.08)">'+
-    '<p style="text-align:center;font-size:13px;font-weight:700;color:var(--p);margin-top:11px">📅 '+(r.caption||'')+'</p>'
-    :'<div class="empty">রুটিন নেই</div>';
+  document.getElementById('rcontent').innerHTML=r?'<img src="'+r.img+'" style="max-width:100%;border-radius:12px;border:1px solid var(--bd);display:block;margin:0 auto;box-shadow:0 2px 10px rgba(0,0,0,.08)"><p style="text-align:center;font-size:13px;font-weight:700;color:var(--p);margin-top:11px">📅 '+(r.caption||'')+'</p>':'<div class="empty">রুটিন নেই</div>';
 }
 
 /* BG */
@@ -717,7 +635,7 @@ function saveBg(){var file=document.getElementById('bg-file').files[0];if(!file)
 function delBg(){if(confirm('মুছে ফেলবেন?')){D.bgImg='';save();applyBg();document.getElementById('bg-prev').style.display='none';document.getElementById('bg-file').value='';}}
 function applyBg(){var h=document.getElementById('main-header');if(D.bgImg)h.style.background='linear-gradient(135deg,rgba(15,23,42,.82),rgba(30,58,138,.75)),url('+D.bgImg+') center/cover no-repeat';else h.style.background='linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#1d4ed8 100%)';}
 
-/* ABOUT PHOTO */
+/* ABOUT */
 function prvAbout(e){var file=e.target.files[0];if(!file)return;var r=new FileReader();r.onload=function(ev){document.getElementById('about-prev-img').src=ev.target.result;document.getElementById('about-prev').style.display='block';};r.readAsDataURL(file);}
 function saveAbout(){var file=document.getElementById('about-file').files[0];if(!file){alert('আগে ছবি বেছে নিন');return;}var r=new FileReader();r.onload=function(ev){D.aboutImg=ev.target.result;save();renderAboutPhoto();alert('সেভ হয়েছে!');};r.readAsDataURL(file);}
 function delAbout(){if(confirm('মুছে ফেলবেন?')){D.aboutImg='';save();renderAboutPhoto();document.getElementById('about-prev').style.display='none';document.getElementById('about-file').value='';}}
@@ -732,7 +650,7 @@ function updateTicker(){var t=document.getElementById('ttx');if(t&&(D.notices||[
 
 /* RENDER ALL */
 function renderAll(){
-  renderStats();renderToday();renderNotices();renderExams();renderExamAdmin();
+  renderStats();renderToday();renderNotices();renderExams();renderExamAdmin();renderPracticals();renderPracticalAdmin();
   renderAssigns();renderAssignAdmin();renderTeachers();renderRoutineView();renderAboutPhoto();applyBg();
 }
 
