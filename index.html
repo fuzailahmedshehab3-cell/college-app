@@ -195,6 +195,25 @@
   .form-check-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(90deg, #e65100, #ff8f00); color: white; padding: 13px 30px; border-radius: 12px; text-decoration: none; font-size: 15px; font-weight: 700; font-family: 'Hind Siliguri', sans-serif; letter-spacing: .3px; transition: opacity .2s; box-shadow: 0 4px 16px rgba(230,81,0,0.35); }
   .form-check-btn:hover { opacity: .88; }
   .form-check-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+  .student-panel { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; margin-bottom: 34px; border-left: 4px solid var(--secondary); }
+  .student-panel-head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 16px; }
+  .student-panel h3 { color: var(--primary); font-size: 1.05rem; margin-bottom: 4px; }
+  .student-panel p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .student-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-secondary { background: var(--light); color: var(--primary); border: 0; padding: 11px 18px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Hind Siliguri', sans-serif; }
+  .btn-secondary:hover { background: #d9e7fd; }
+  .student-status { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; color: #2e7d32; border-radius: 16px; padding: 4px 10px; font-size: 12px; font-weight: 700; margin-top: 8px; }
+  .student-form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+  .student-form label { color: var(--primary); font-size: 13px; font-weight: 700; }
+  .student-form input, .student-form select { width: 100%; padding: 11px 14px; border: 2px solid var(--light); border-radius: 10px; font-size: 14px; font-family: 'Hind Siliguri', sans-serif; outline: none; }
+  .student-form input:focus, .student-form select:focus { border-color: var(--secondary); }
+  .my-update-list { display: grid; gap: 10px; }
+  .my-update-item { background: var(--gray); border-radius: 10px; padding: 12px 14px; border-left: 3px solid var(--accent); font-size: 13px; color: var(--text); line-height: 1.6; }
+  .my-update-item strong { color: var(--primary); }
+  .routine-entry-table { width: 100%; border-collapse: collapse; background: var(--gray); border-radius: 10px; overflow: hidden; }
+  .routine-entry-table th, .routine-entry-table td { border-bottom: 1px solid var(--light); padding: 8px; text-align: left; font-size: 13px; }
+  .routine-entry-table th { color: var(--primary); background: #eef5ff; font-weight: 700; }
+  .routine-entry-table input { border: 1px solid var(--light); border-radius: 8px; padding: 9px 10px; font-family: 'Hind Siliguri', sans-serif; width: 100%; }
 
   @media(max-width: 700px) {
     .hero h1 { font-size: 1.5rem; }
@@ -249,6 +268,23 @@
 <!-- HOME -->
 <div class="page-section active" id="page-home">
   <div class="home-content">
+    <div class="student-panel">
+      <div class="student-panel-head">
+        <div>
+          <h3>🔔 আমার ক্লাস আপডেট</h3>
+          <p id="studentProfileText">নিজের নাম, রেজিস্ট্রেশন নাম্বার ও বর্ষ সেভ করলে শুধু আপনার বর্ষের আপডেট এখানে দেখা যাবে।</p>
+          <span class="student-status" id="studentNotifyStatus" style="display:none;">নোটিফিকেশন চালু আছে</span>
+        </div>
+        <div class="student-actions">
+          <button class="btn-secondary" onclick="openStudentModal()">আইডি খুলুন / আপডেট করুন</button>
+          <button class="btn-primary" onclick="enableNotifications()">নোটিফিকেশন চালু করুন</button>
+        </div>
+      </div>
+      <div class="my-update-list" id="myUpdateList">
+        <div class="my-update-item">আপনার বর্ষ সেভ করলে এখানেই আপনার ক্লাস, পরীক্ষা, ব্যবহারিক ও অ্যাসাইনমেন্ট আপডেট দেখা যাবে।</div>
+      </div>
+    </div>
+
     <div class="section-title">📝 পরীক্ষা</div>
     <div class="exam-sub">
       <button class="exam-sub-btn" onclick="showExamOptions('১ম বর্ষ')">১ম বর্ষ</button>
@@ -437,6 +473,27 @@
   </div>
 </div>
 
+<!-- Student Registration Modal -->
+<div class="modal-overlay" id="studentModal">
+  <div class="modal-box" style="max-width:520px;">
+    <h3 style="color:var(--primary);margin-bottom:8px;font-size:1.2rem;">🔔 শিক্ষার্থী আইডি</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">আপনার বর্ষ অনুযায়ী আপডেট দেখাতে এই তথ্যগুলো সেভ করুন।</p>
+    <div class="student-form">
+      <label>নাম</label>
+      <input type="text" id="studentName" placeholder="আপনার নাম লিখুন">
+      <label>রেজিস্ট্রেশন নাম্বার</label>
+      <input type="text" id="studentRegNo" placeholder="আপনার রেজিস্ট্রেশন নাম্বার লিখুন">
+      <label>বর্ষ</label>
+      <select id="studentYear">
+        <option>১ম বর্ষ</option><option>২য় বর্ষ</option><option>৩য় বর্ষ</option><option>৪র্থ বর্ষ</option><option>মাস্টার্স</option>
+      </select>
+      <p id="studentError" style="color:red;font-size:13px;display:none;"></p>
+      <button class="btn-primary" onclick="saveStudentProfile()">সেভ করুন</button>
+      <button class="btn-secondary" onclick="closeModal('studentModal')">বন্ধ করুন</button>
+    </div>
+  </div>
+</div>
+
 <!-- Facebook Group Modal -->
 <div class="modal-overlay" id="facebookModal">
   <div class="modal-box" style="max-width:500px;">
@@ -536,18 +593,27 @@
         <button class="admin-tab" onclick="switchTab('tabExam',this)">📝 পরীক্ষা</button>
         <button class="admin-tab" onclick="switchTab('tabPractical',this)">🔬 ব্যবহারিক</button>
         <button class="admin-tab" onclick="switchTab('tabAssign',this)">📄 অ্যাসাইনমেন্ট</button>
+        <button class="admin-tab" onclick="switchTab('tabHoliday',this)">🚫 বন্ধ</button>
       </div>
 
       <!-- Tab: Notice -->
       <div id="tabNotice" class="admin-form">
-        <label>নোটিশ শিরোনাম</label>
-        <input type="text" id="nTitle" placeholder="নোটিশের বিষয়">
-        <label>বিস্তারিত</label>
-        <textarea id="nBody" placeholder="নোটিশের বিস্তারিত বিবরণ"></textarea>
-        <label>হোম পেজে দেখানোর শেষ তারিখ</label>
+        <label>যাদের কাছে যাবে</label>
+        <select id="nTargetYear">
+          <option value="all">সকল বর্ষ</option><option>১ম বর্ষ</option><option>২য় বর্ষ</option><option>৩য় বর্ষ</option><option>৪র্থ বর্ষ</option><option>মাস্টার্স</option>
+        </select>
+        <label>নোটিশের শিরোনাম (ঐচ্ছিক)</label>
+        <input type="text" id="nTitle" placeholder="যেমন: পরীক্ষার নোটিশ">
+        <label>📸 নোটিশের ছবি আপলোড করুন</label>
+        <input type="file" id="nImage" accept="image/*" onchange="previewNoticeImage(this)">
+        <div id="nImagePreview" style="display:none;margin-top:8px;">
+          <img id="nPreviewImg" src="" alt="preview" style="width:100%;max-height:220px;object-fit:contain;border-radius:10px;border:2px solid var(--light);">
+        </div>
+        <label>হোম পেজে দেখানোর শেষ তারিখ (ঐচ্ছিক)</label>
         <input type="date" id="nExpireDate">
         <button class="btn-primary" onclick="addNotice()">নোটিশ যোগ করুন</button>
         <p id="noticeSuccess" style="color:green;font-size:13px;display:none;">✅ নোটিশ সফলভাবে যোগ হয়েছে!</p>
+        <p id="noticeError" style="color:red;font-size:13px;display:none;">⚠️ ছবি বা শিরোনাম দিন।</p>
         <div class="admin-saved-list">
           <h4>📋 সংরক্ষিত নোটিশ</h4>
           <div id="adminNoticeList"></div>
@@ -556,20 +622,36 @@
 
       <!-- Tab: Routine -->
       <div id="tabRoutine" class="admin-form" style="display:none;">
-        <label>বর্ষ নির্বাচন করুন</label>
-        <select id="routineYear">
+        <label>অটো দৈনিক আপডেটের জন্য বর্ষ</label>
+        <select id="classRoutineYear">
           <option>১ম বর্ষ</option><option>২য় বর্ষ</option><option>৩য় বর্ষ</option><option>৪র্থ বর্ষ</option><option>মাস্টার্স</option>
         </select>
-        <label>রুটিন বিবরণ / লিংক</label>
-        <textarea id="routineBody" placeholder="রুটিনের তথ্য বা PDF লিংক দিন"></textarea>
-        <label>কম্পিউটার থেকে রুটিন ফাইল আপলোড</label>
-        <input type="file" id="routineFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp">
-        <button class="btn-primary" onclick="saveRoutine()">রুটিন সেভ করুন</button>
-        <p id="routineSuccess" style="color:green;font-size:13px;display:none;">✅ রুটিন সেভ হয়েছে!</p>
+        <label>বার</label>
+        <select id="classRoutineDay">
+          <option>রবিবার</option><option>সোমবার</option><option>মঙ্গলবার</option><option>বুধবার</option><option>বৃহস্পতিবার</option><option>শুক্রবার</option><option>শনিবার</option>
+        </select>
+        <label>ক্লাসের টেবিল</label>
+        <table class="routine-entry-table">
+          <thead>
+            <tr><th style="width:34%;">সময়</th><th>কার / কোন ক্লাস</th><th style="width:72px;">মুছুন</th></tr>
+          </thead>
+          <tbody id="classRoutineRows">
+            <tr>
+              <td><input type="text" class="routine-time" placeholder="যেমন: 09:00-10:00"></td>
+              <td><input type="text" class="routine-class" placeholder="যেমন: ৩য় বর্ষ Real Analysis - শিক্ষক: ..."></td>
+              <td><button class="btn-delete" type="button" onclick="deleteRoutineInputRow(this)">ডিলিট</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn-secondary" onclick="addRoutineInputRow()">আরেকটি সারি যোগ করুন</button>
+        <button class="btn-primary" onclick="saveClassRoutineTable()">ক্লাস টেবিল সেভ করুন</button>
+        <p id="classRoutineSuccess" style="color:green;font-size:13px;display:none;">✅ ক্লাস রুটিনে যোগ হয়েছে!</p>
+        <p id="classRoutineError" style="color:red;font-size:13px;display:none;"></p>
         <div class="admin-saved-list">
-          <h4>🗓️ সংরক্ষিত রুটিন</h4>
-          <div id="adminRoutineList"></div>
+          <h4>🔔 অটো দৈনিক আপডেটের ক্লাস রুটিন</h4>
+          <div id="adminClassRoutineList"></div>
         </div>
+
       </div>
 
       <!-- Tab: Exam -->
@@ -603,8 +685,6 @@
         <select id="practicalClassYear">
           <option>১ম বর্ষ</option><option>২য় বর্ষ</option><option>৩য় বর্ষ</option><option>৪র্থ বর্ষ</option><option>মাস্টার্স</option>
         </select>
-        <label>ব্যবহারিক ক্লাসের URL</label>
-        <input type="url" id="practicalClassUrl" placeholder="https://example.com/practical-class">
         <label>ব্যবহারিক ক্লাসের তারিখ</label>
         <input type="date" id="practicalClassDate">
         <label>ব্যবহারিক ক্লাসের সময় (ঐচ্ছিক)</label>
@@ -649,11 +729,28 @@
         <input type="text" id="assignTitle" placeholder="অ্যাসাইনমেন্টের বিষয়">
         <label>বিস্তারিত ও জমার তারিখ</label>
         <textarea id="assignBody" placeholder="বিস্তারিত তথ্য"></textarea>
+        <label>জমার তারিখ (ঐচ্ছিক)</label>
+        <input type="date" id="assignDueDate">
         <button class="btn-primary" onclick="saveAssign()">অ্যাসাইনমেন্ট যোগ করুন</button>
         <p id="assignSuccess" style="color:green;font-size:13px;display:none;">✅ অ্যাসাইনমেন্ট যোগ হয়েছে!</p>
         <div class="admin-saved-list">
           <h4>📄 সংরক্ষিত অ্যাসাইনমেন্ট</h4>
           <div id="adminAssignList"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Holiday -->
+      <div id="tabHoliday" class="admin-form" style="display:none;">
+        <label>বন্ধের তারিখ</label>
+        <input type="date" id="holidayDate">
+        <label>কারণ / নাম</label>
+        <input type="text" id="holidayTitle" placeholder="যেমন: সরকারি ছুটি">
+        <button class="btn-primary" onclick="saveHoliday()">বন্ধের দিন সেভ করুন</button>
+        <p id="holidaySuccess" style="color:green;font-size:13px;display:none;">✅ বন্ধের দিন সেভ হয়েছে!</p>
+        <p id="holidayError" style="color:red;font-size:13px;display:none;"></p>
+        <div class="admin-saved-list">
+          <h4>🚫 সংরক্ষিত বন্ধের দিন</h4>
+          <div id="adminHolidayList"></div>
         </div>
       </div>
 
@@ -664,33 +761,117 @@
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
   const STORE_KEY = 'mathDepartmentSiteData';
+  const YEAR_OPTIONS = ['১ম বর্ষ','২য় বর্ষ','৩য় বর্ষ','৪র্থ বর্ষ','মাস্টার্স'];
+  const DAY_OPTIONS = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+  const CLOSED_DAYS = ['শুক্রবার'];
+  const FIREBASE_CONFIG = {
+    apiKey: '',
+    authDomain: '',
+    databaseURL: '',
+    projectId: '',
+    storageBucket: '',
+    messagingSenderId: '',
+    appId: ''
+  };
+  const REMOTE_STORE_PATH = 'mathDepartmentSiteData';
   const defaultStore = {
     notices: [], routines: {}, exams: {}, assignments: {},
-    practicalClasses: {}, practicalClassUrl: '', practicalExams: {},
+    practicalClasses: {}, practicalExams: {},
+    classRoutine: [],
+    holidays: [],
+    studentProfile: null, notificationsEnabled: false,
     loggedIn: false,
     credentials: { user: 'admin', pass: 'math2025' }
   };
   let store = loadStore();
   let selectedExamYear = '';
+  let remoteDb = null;
+  let isApplyingRemoteStore = false;
 
-  function loadStore() {
-    try {
-      const saved = JSON.parse(localStorage.getItem(STORE_KEY));
-      if(!saved) return {...defaultStore};
-      return {
+  function normalizeStore(saved) {
+    if(!saved) return {...defaultStore};
+    return {
         ...defaultStore, ...saved,
         credentials: defaultStore.credentials,
         practicalClasses: saved.practicalClasses || {},
-        practicalClassUrl: saved.practicalClassUrl || saved.practicalUrl || saved.attendanceUrl || ''
+        classRoutine: saved.classRoutine || [],
+        holidays: saved.holidays || [],
+        studentProfile: saved.studentProfile || null,
+        notificationsEnabled: !!saved.notificationsEnabled
       };
+  }
+
+  function loadStore() {
+    try {
+      return normalizeStore(JSON.parse(localStorage.getItem(STORE_KEY)));
     } catch(e) { return {...defaultStore}; }
   }
 
   function saveStore() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); return true; }
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(store));
+      if(remoteDb && !isApplyingRemoteStore) {
+        remoteDb.ref(REMOTE_STORE_PATH).set({
+          ...store,
+          loggedIn: false,
+          studentProfile: null,
+          notificationsEnabled: false,
+          updatedAt: new Date().toISOString()
+        });
+      }
+      return true;
+    }
     catch(e) { alert('সেভ করা যায়নি। ব্রাউজারের storage পূর্ণ হতে পারে।'); return false; }
+  }
+
+  function hasFirebaseConfig() {
+    return !!(window.firebase && FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.databaseURL && FIREBASE_CONFIG.projectId);
+  }
+
+  function renderAll() {
+    renderNotices();
+    renderUpcomingExams();
+    renderUpcomingPracticalClasses();
+    renderUpcomingPracticalExams();
+    renderHomeAssignments();
+    renderStudentPanel();
+    renderMyUpdates();
+    renderCurrentAdminTab();
+    notifyTodayStudyUpdates();
+  }
+
+  function initRemoteSync() {
+    if(!hasFirebaseConfig()) return;
+    try {
+      if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+      remoteDb = firebase.database();
+      remoteDb.ref(REMOTE_STORE_PATH).on('value', snapshot => {
+        const remoteStore = snapshot.val();
+        if(!remoteStore) {
+          saveStore();
+          return;
+        }
+        isApplyingRemoteStore = true;
+        const localStudentProfile = store.studentProfile;
+        const localNotificationsEnabled = store.notificationsEnabled;
+        const localLoggedIn = store.loggedIn;
+        store = normalizeStore({
+          ...remoteStore,
+          studentProfile: localStudentProfile,
+          notificationsEnabled: localNotificationsEnabled,
+          loggedIn: localLoggedIn
+        });
+        localStorage.setItem(STORE_KEY, JSON.stringify(store));
+        isApplyingRemoteStore = false;
+        renderAll();
+      });
+    } catch(e) {
+      console.warn('Remote sync চালু করা যায়নি:', e);
+    }
   }
 
   function readFileAsDataUrl(file) {
@@ -709,6 +890,159 @@
   function isImageFile(fn) { return /\.(jpg|jpeg|png|webp|gif)$/i.test(fn||''); }
   function getExamBody(exam) { return typeof exam==='string' ? exam : (exam?.body||''); }
   function getExamDateTime(exam) { return typeof exam==='string' ? '' : (exam?.dateTime||''); }
+  function getTargetLabel(target) { return !target || target==='all' ? 'সকল বর্ষ' : target; }
+  function isTargetForStudent(target) {
+    return !!store.studentProfile && (!target || target==='all' || target===store.studentProfile.year);
+  }
+  function makeUpdate(type, title, body, target, dateTime) {
+    return { type, title, body, target: target || 'all', dateTime: dateTime || '', createdAt: new Date().toISOString() };
+  }
+
+  function openStudentModal() {
+    const profile = store.studentProfile || {};
+    document.getElementById('studentName').value = profile.name || '';
+    document.getElementById('studentRegNo').value = profile.regNo || '';
+    document.getElementById('studentYear').value = profile.year || '১ম বর্ষ';
+    document.getElementById('studentError').style.display = 'none';
+    document.getElementById('studentModal').classList.add('open');
+  }
+
+  function saveStudentProfile() {
+    const name = document.getElementById('studentName').value.trim();
+    const regNo = document.getElementById('studentRegNo').value.trim();
+    const year = document.getElementById('studentYear').value;
+    if(!name || !regNo) { showError('studentError','নাম ও রেজিস্ট্রেশন নাম্বার লিখুন।'); return; }
+    store.studentProfile = { name, regNo, year };
+    if(!saveStore()) return;
+    closeModal('studentModal');
+    renderStudentPanel();
+    renderMyUpdates();
+    notifyTodayStudyUpdates();
+  }
+
+  async function enableNotifications() {
+    if(!('Notification' in window)) {
+      alert('এই ব্রাউজারে নোটিফিকেশন সাপোর্ট নেই।');
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    store.notificationsEnabled = permission === 'granted';
+    saveStore();
+    renderStudentPanel();
+    if(store.notificationsEnabled) {
+      sendLocalNotification('গণিত বিভাগ', 'নোটিফিকেশন চালু হয়েছে। আপনার বর্ষের আপডেট পেলে জানানো হবে।', store.studentProfile?.year || 'all');
+      notifyTodayStudyUpdates();
+    }
+  }
+
+  function sendLocalNotification(title, body, target) {
+    if(isClosedDay()) return;
+    if(!store.notificationsEnabled || !isTargetForStudent(target) || !('Notification' in window) || Notification.permission !== 'granted') return;
+    new Notification(title, { body });
+  }
+
+  function getTodayName() {
+    return DAY_OPTIONS[new Date().getDay()];
+  }
+
+  function isClosedDay(date = new Date()) {
+    const dateKey = getLocalDateKey(date);
+    return CLOSED_DAYS.includes(DAY_OPTIONS[date.getDay()]) ||
+      (store.holidays || []).some(item => item.date === dateKey);
+  }
+
+  function getLocalDateKey(date = new Date()) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  function getTodayClasses(year) {
+    const today = getTodayName();
+    return (store.classRoutine || [])
+      .filter(c => c.year === year && c.day === today)
+      .sort((a,b) => (a.time || '').localeCompare(b.time || ''));
+  }
+
+  function notifyDailyClassUpdate() {
+    if(isClosedDay() || !store.studentProfile || !store.notificationsEnabled) return;
+    const todayKey = getLocalDateKey();
+    const storageKey = `dailyClassNotify:${store.studentProfile.year}:${todayKey}`;
+    if(localStorage.getItem(storageKey)) return;
+    const classes = getTodayClasses(store.studentProfile.year);
+    if(!classes.length) return;
+    const body = classes.map(c => `${c.time ? c.time + ' - ' : ''}${c.subject}`).join('\n');
+    sendLocalNotification('আজকের ক্লাস রুটিন', body, store.studentProfile.year);
+    localStorage.setItem(storageKey, 'sent');
+  }
+
+  function isSameLocalDate(a, b = new Date()) {
+    const d = parseExamDate(a);
+    if(!d) return false;
+    return d.getFullYear() === b.getFullYear() &&
+      d.getMonth() === b.getMonth() &&
+      d.getDate() === b.getDate();
+  }
+
+  function sendOncePerDayNotify(key, title, body, target) {
+    if(isClosedDay() || !store.studentProfile || !store.notificationsEnabled || !isTargetForStudent(target)) return;
+    const todayKey = getLocalDateKey();
+    const storageKey = `dailyUpdateNotify:${store.studentProfile.year}:${todayKey}:${key}`;
+    if(localStorage.getItem(storageKey)) return;
+    sendLocalNotification(title, body, target);
+    localStorage.setItem(storageKey, 'sent');
+  }
+
+  function notifyTodayStudyUpdates() {
+    if(isClosedDay() || !store.studentProfile || !store.notificationsEnabled) return;
+    const year = store.studentProfile.year;
+    const todayClasses = getTodayClasses(year);
+    if(todayClasses.length) {
+      sendOncePerDayNotify(
+        'classes',
+        'আজকের ক্লাস রুটিন',
+        todayClasses.map(c => `${c.time ? c.time + ' - ' : ''}${c.subject}`).join('\n'),
+        year
+      );
+    }
+
+    Object.entries(store.exams)
+      .filter(([key, exam]) => key.startsWith(year + ' - ') && isSameLocalDate(getExamDateTime(exam)))
+      .forEach(([key, exam]) => sendOncePerDayNotify(
+        `exam:${key}`,
+        'আজ পরীক্ষা আছে',
+        `${key}\n${formatExamDateTime(getExamDateTime(exam))}\n${getExamBody(exam)}`,
+        year
+      ));
+
+    Object.entries(store.practicalClasses)
+      .filter(([y, info]) => y === year && isSameLocalDate(typeof info === 'string' ? '' : (info?.dateTime || '')))
+      .forEach(([y, info]) => sendOncePerDayNotify(
+        `practical-class:${y}`,
+        'আজ ব্যবহারিক ক্লাস আছে',
+        `${formatExamDateTime(info.dateTime)}\n${info.body || ''}`,
+        y
+      ));
+
+    Object.entries(store.practicalExams)
+      .filter(([y, exam]) => y === year && isSameLocalDate(getExamDateTime(exam)))
+      .forEach(([y, exam]) => sendOncePerDayNotify(
+        `practical-exam:${y}`,
+        'আজ ব্যবহারিক পরীক্ষা আছে',
+        `${formatExamDateTime(getExamDateTime(exam))}\n${getExamBody(exam)}`,
+        y
+      ));
+
+    Object.entries(store.assignments)
+      .filter(([y, item]) => y === year && item?.dueDate && isSameLocalDate(item.dueDate))
+      .forEach(([y, item]) => sendOncePerDayNotify(
+        `assignment:${y}:${item.title || ''}`,
+        'আজ অ্যাসাইনমেন্ট জমা',
+        `${item.title || 'অ্যাসাইনমেন্ট'}\n${item.body || ''}`,
+        y
+      ));
+  }
 
   function parseExamDate(dt) {
     if(!dt) return null;
@@ -756,7 +1090,7 @@
     document.getElementById('page-'+page).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
     if(el) el.classList.add('active');
-    if(page==='home') { renderNotices(); renderUpcomingExams(); renderUpcomingPracticalClasses(); renderUpcomingPracticalExams(); renderHomeAssignments(); }
+    if(page==='home') { renderNotices(); renderUpcomingExams(); renderUpcomingPracticalClasses(); renderUpcomingPracticalExams(); renderHomeAssignments(); renderStudentPanel(); renderMyUpdates(); }
     document.getElementById('navLinks').classList.remove('open');
     return false;
   }
@@ -798,11 +1132,10 @@
     const result = document.getElementById('practicalClassResult');
     if(!result) return;
     const ci = store.practicalClasses[year];
-    const url = typeof ci==='string' ? ci : (ci?.url || store.practicalClassUrl || '');
-    const body = typeof ci==='string' ? '' : (ci?.body||'');
+    const body = typeof ci==='string' ? ci : (ci?.body||'');
     const dt = typeof ci==='string' ? '' : (ci?.dateTime||'');
-    if(!url&&!body&&!dt) { result.textContent='এখনো এই বর্ষের ব্যবহারিক ক্লাসের তথ্য যোগ করা হয়নি।'; return; }
-    result.innerHTML = `<strong>${escapeHtml(year)} ব্যবহারিক ক্লাস</strong><br>তারিখ: ${escapeHtml(formatExamDateTime(dt))}<br>${body?escapeHtml(body)+'<br>':''}${url?`<a href="${escapeHtml(url)}" target="_blank" style="display:inline-block;margin-top:12px;background:var(--secondary);color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600;">🔗 ব্যবহারিক ক্লাস লিংক খুলুন</a>`:''}`;
+    if(!body&&!dt) { result.textContent='এখনো এই বর্ষের ব্যবহারিক ক্লাসের তথ্য যোগ করা হয়নি।'; return; }
+    result.innerHTML = `<strong>${escapeHtml(year)} ব্যবহারিক ক্লাস</strong><br>তারিখ: ${escapeHtml(formatExamDateTime(dt))}<br>${body?escapeHtml(body):''}`;
   }
 
   function showPracticalExamYears() {
@@ -827,26 +1160,69 @@
     result.innerHTML = `<strong>${escapeHtml(year)} ব্যবহারিক পরীক্ষা</strong><br>তারিখ: ${escapeHtml(formatExamDateTime(getExamDateTime(exam)))}<br>${escapeHtml(getExamBody(exam))}`;
   }
 
+  function renderClassRoutineOptions() {
+    const availableYears = YEAR_OPTIONS.filter(year => (store.classRoutine || []).some(item => item.year === year));
+    const years = availableYears.length ? availableYears : YEAR_OPTIONS;
+    return `
+      <div class="exam-sub" style="margin-bottom:16px;justify-content:center;">
+        ${years.map(year => `<button class="exam-sub-btn" onclick="showClassRoutineForYear('${escapeHtml(year)}')">${escapeHtml(year)}</button>`).join('')}
+      </div>
+      <div id="classRoutineResult" style="text-align:left;">
+        <div style="font-size:14px;color:var(--muted);line-height:1.7;text-align:center;">যে বর্ষের ক্লাস রুটিন দেখতে চান সেটি নির্বাচন করুন।</div>
+      </div>`;
+  }
+
+  function showClassRoutineForYear(year) {
+    const result = document.getElementById('classRoutineResult');
+    if(!result) return;
+    result.innerHTML = renderClassRoutineModal(year);
+  }
+
+  function renderClassRoutineModal(filterYear = '') {
+    const items = (store.classRoutine || [])
+      .filter(item => !filterYear || item.year === filterYear)
+      .slice()
+      .sort((a,b) => YEAR_OPTIONS.indexOf(a.year) - YEAR_OPTIONS.indexOf(b.year) || DAY_OPTIONS.indexOf(a.day) - DAY_OPTIONS.indexOf(b.day) || (a.time || '').localeCompare(b.time || ''));
+    if(!items.length) {
+      return `<div style="font-size:14px;color:var(--muted);line-height:1.7;text-align:center;">${filterYear ? escapeHtml(filterYear) + ' এর জন্য ' : ''}এখনো কোনো ক্লাস রুটিন যোগ করা হয়নি।</div>`;
+    }
+    const grouped = items.reduce((acc, item) => {
+      const key = `${item.year}||${item.day}`;
+      if(!acc[key]) acc[key] = [];
+      acc[key].push(item);
+      return acc;
+    }, {});
+    return Object.entries(grouped).map(([key, rows]) => {
+      const [year, day] = key.split('||');
+      return `
+        <div style="margin-bottom:18px;text-align:left;">
+          <h3 style="font-size:15px;color:var(--primary);margin-bottom:8px;">${escapeHtml(year)} · ${escapeHtml(day)}</h3>
+          <table style="width:100%;border-collapse:collapse;background:var(--gray);border-radius:10px;overflow:hidden;">
+            <thead>
+              <tr>
+                <th style="width:30%;text-align:left;padding:9px;border-bottom:1px solid var(--light);background:#eef5ff;color:var(--primary);font-size:13px;">সময়</th>
+                <th style="text-align:left;padding:9px;border-bottom:1px solid var(--light);background:#eef5ff;color:var(--primary);font-size:13px;">ক্লাস</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map(item => `
+                <tr>
+                  <td style="padding:9px;border-bottom:1px solid var(--light);font-size:13px;color:var(--text);">${escapeHtml(item.time || '--')}</td>
+                  <td style="padding:9px;border-bottom:1px solid var(--light);font-size:13px;color:var(--text);">${escapeHtml(item.subject || '')}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+    }).join('');
+  }
+
   // MODALS
   function showModal(type) {
     document.querySelector('#infoModal .modal-box').style.maxWidth = '';
     if(type==='routineModal') {
-      const info = Object.keys(store.routines).length
-        ? Object.entries(store.routines).map(([y,v]) => {
-            const text = escapeHtml(v.body||'');
-            const file = v.fileUrl ? isImageFile(v.fileName)
-              ? `<img src="${v.fileUrl}" alt="${escapeHtml(y)} রুটিন" style="display:block;width:100%;max-height:70vh;object-fit:contain;margin-top:10px;border:1px solid var(--light);border-radius:10px;background:white;">`
-              : `\n<a href="${v.fileUrl}" target="_blank" style="display:inline-block;margin-top:8px;color:var(--secondary);font-weight:700;">📎 ${escapeHtml(v.fileName)} খুলুন</a>` : '';
-            return `<div style="margin-bottom:14px;"><strong>${escapeHtml(y)}:</strong>\n${text}${file}</div>`;
-          }).join('')
-        : 'এখনো কোনো রুটিন যোগ করা হয়নি।';
       document.getElementById('infoModalTitle').textContent = '🗓️ ক্লাস রুটিন';
-      if(Object.keys(store.routines).length) {
-        document.querySelector('#infoModal .modal-box').style.maxWidth = '760px';
-        document.getElementById('infoModalBody').innerHTML = info;
-      } else {
-        document.getElementById('infoModalBody').textContent = info;
-      }
+      document.querySelector('#infoModal .modal-box').style.maxWidth = '760px';
+      document.getElementById('infoModalBody').innerHTML = renderClassRoutineOptions();
       document.getElementById('infoModal').classList.add('open');
     } else if(type==='assignModal') {
       const info = Object.keys(store.assignments).length
@@ -879,6 +1255,48 @@
     m.addEventListener('click', function(e) { if(e.target===this) this.classList.remove('open'); });
   });
 
+  function renderStudentPanel() {
+    const text = document.getElementById('studentProfileText');
+    const status = document.getElementById('studentNotifyStatus');
+    if(!text || !status) return;
+    const profile = store.studentProfile;
+    if(profile) {
+      text.textContent = `${profile.name} · রেজিস্ট্রেশন: ${profile.regNo} · ${profile.year}`;
+    } else {
+      text.textContent = 'নিজের নাম, রেজিস্ট্রেশন নাম্বার ও বর্ষ সেভ করলে শুধু আপনার বর্ষের আপডেট এখানে দেখা যাবে।';
+    }
+    status.style.display = store.notificationsEnabled ? 'inline-flex' : 'none';
+  }
+
+  function renderMyUpdates() {
+    const el = document.getElementById('myUpdateList');
+    if(!el) return;
+    if(!store.studentProfile) {
+      el.innerHTML = '<div class="my-update-item">আপনার বর্ষ সেভ করলে এখানেই আপনার ক্লাস, পরীক্ষা, ব্যবহারিক ও অ্যাসাইনমেন্ট আপডেট দেখা যাবে।</div>';
+      return;
+    }
+    const year = store.studentProfile.year;
+    const updates = [];
+    getTodayClasses(year).forEach(c=>updates.push(makeUpdate('আজকের ক্লাস', c.subject, c.note || '', year, c.time || '')));
+    store.notices.filter(n=>isTargetForStudent(n.target)).forEach(n=>updates.push(makeUpdate('নোটিশ', n.title || 'নোটিশ', '', n.target, n.createdAt || '')));
+    Object.entries(store.routines).filter(([y])=>y===year).forEach(([y,v])=>updates.push(makeUpdate('রুটিন', y, v.body || '', y, v.createdAt || '')));
+    Object.entries(store.exams).filter(([key])=>key.startsWith(year + ' - ')).forEach(([key,exam])=>updates.push(makeUpdate('পরীক্ষা', key, getExamBody(exam), year, getExamDateTime(exam))));
+    Object.entries(store.practicalClasses).filter(([y])=>y===year).forEach(([y,info])=>updates.push(makeUpdate('ব্যবহারিক ক্লাস', y, typeof info==='string' ? info : (info?.body || ''), y, typeof info==='string' ? '' : (info?.dateTime || ''))));
+    Object.entries(store.practicalExams).filter(([y])=>y===year).forEach(([y,exam])=>updates.push(makeUpdate('ব্যবহারিক পরীক্ষা', y, getExamBody(exam), y, getExamDateTime(exam))));
+    Object.entries(store.assignments).filter(([y])=>y===year).forEach(([y,v])=>updates.push(makeUpdate('অ্যাসাইনমেন্ট', v.title || y, v.body || '', y, v.dueDate || v.createdAt || '')));
+    if(!updates.length) {
+      el.innerHTML = `<div class="my-update-item">${escapeHtml(year)} এর জন্য এখনো কোনো আপডেট নেই।</div>`;
+      return;
+    }
+    el.innerHTML = updates.slice(0, 8).map(u=>`
+      <div class="my-update-item">
+        <strong>${escapeHtml(u.type)}: ${escapeHtml(u.title)}</strong><br>
+        ${u.type === 'আজকের ক্লাস' && u.dateTime ? `সময়: ${escapeHtml(u.dateTime)}<br>` : ''}
+        ${u.type !== 'আজকের ক্লাস' && u.dateTime ? `তারিখ: ${escapeHtml(formatExamDateTime(u.dateTime))}<br>` : ''}
+        ${u.body ? escapeHtml(u.body).slice(0, 120) : ''}
+      </div>`).join('');
+  }
+
   // ADMIN
   function openAdmin() {
     document.getElementById('adminOverlay').classList.add('open');
@@ -903,10 +1321,11 @@
 
   function renderAdminTabById(tabId) {
     if(tabId==='tabNotice') renderAdminNoticeList();
-    else if(tabId==='tabRoutine') renderAdminRoutineList();
+    else if(tabId==='tabRoutine') renderAdminClassRoutineList();
     else if(tabId==='tabExam') renderAdminExamList();
     else if(tabId==='tabPractical') { renderAdminPracticalClassList(); renderAdminPracticalExamList(); }
     else if(tabId==='tabAssign') renderAdminAssignList();
+    else if(tabId==='tabHoliday') renderAdminHolidayList();
   }
 
   document.getElementById('adminOverlay').addEventListener('click', function(e) { if(e.target===this) closeAdmin(); });
@@ -929,17 +1348,53 @@
   function showSuccess(id) { const el=document.getElementById(id); el.style.display='block'; setTimeout(()=>el.style.display='none',2500); }
   function showError(id, msg) { const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
 
-  function addNotice() {
-    const title=document.getElementById('nTitle').value.trim();
-    const body=document.getElementById('nBody').value.trim();
-    const expireDate=document.getElementById('nExpireDate').value;
-    if(!title||!body) return;
-    const today=new Date();
-    const bn=['জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে'];
-    store.notices.unshift({title,body,date:today.getDate()+' '+bn[today.getMonth()],expireDate});
-    saveStore(); renderNotices();
-    document.getElementById('nTitle').value=''; document.getElementById('nBody').value=''; document.getElementById('nExpireDate').value='';
-    renderAdminNoticeList(); showSuccess('noticeSuccess');
+  function previewNoticeImage(input) {
+    const preview = document.getElementById('nImagePreview');
+    const img = document.getElementById('nPreviewImg');
+    if(input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = e => { img.src = e.target.result; preview.style.display='block'; };
+      reader.readAsDataURL(input.files[0]);
+    } else { preview.style.display='none'; }
+  }
+
+  async function addNotice() {
+    const target = document.getElementById('nTargetYear').value;
+    const title = document.getElementById('nTitle').value.trim();
+    const expireDate = document.getElementById('nExpireDate').value;
+    const fileInput = document.getElementById('nImage');
+    const file = fileInput.files[0];
+    if(!title && !file) { showError('noticeError','ছবি বা শিরোনাম দিন।'); return; }
+    const today = new Date();
+    const bn = ['জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে'];
+    let imageUrl = '';
+    if(file) {
+      imageUrl = await new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxW = 900;
+            let w = img.width, h = img.height;
+            if(w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', 0.78));
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+    store.notices.unshift({title, imageUrl, date: today.getDate()+' '+bn[today.getMonth()], expireDate, target, createdAt: new Date().toISOString()});
+    if(!saveStore()) return;
+    document.getElementById('nTitle').value='';
+    document.getElementById('nExpireDate').value='';
+    fileInput.value='';
+    document.getElementById('nImagePreview').style.display='none';
+    renderNotices(); renderAdminNoticeList(); renderMyUpdates(); showSuccess('noticeSuccess');
+    sendLocalNotification('নতুন নোটিশ', `${getTargetLabel(target)}: ${title || 'নোটিশ আপলোড হয়েছে'}`, target);
   }
 
   function renderNotices() {
@@ -949,10 +1404,18 @@
       home.innerHTML=`<div class="notice-item"><div class="notice-date">--</div><div class="notice-text">এখনো কোনো নোটিশ যোগ করা হয়নি।</div></div>`;
       full.innerHTML='<li>এখনো কোনো নোটিশ যোগ করা হয়নি।</li>'; return;
     }
-    const active=store.notices.filter(isNoticeActiveOnHome).slice(0,3);
-    home.innerHTML=active.length ? active.map(n=>`<div class="notice-item"><div class="notice-date">${n.date}</div><div class="notice-text"><span class="notice-badge badge-new">নতুন</span><br>${escapeHtml(n.title)} — ${escapeHtml(n.body)}</div></div>`).join('')
-      : `<div class="notice-item"><div class="notice-date">--</div><div class="notice-text">হোম পেজে সক্রিয় নোটিশ নেই।</div></div>`;
-    full.innerHTML=store.notices.map(n=>`<li><strong>${escapeHtml(n.title)}</strong><p>${escapeHtml(n.body)}</p><div class="ndate">📅 ${n.date}${n.expireDate?' · হোমে শেষ: '+n.expireDate:''}</div></li>`).join('');
+    const noticeCard = n => {
+      const imgHtml = n.imageUrl ? `<img src="${n.imageUrl}" alt="নোটিশ" style="width:100%;max-height:320px;object-fit:contain;border-radius:10px;margin-top:8px;border:1px solid var(--light);background:#fff;display:block;">` : '';
+      const titleHtml = n.title ? `<strong>${escapeHtml(n.title)}</strong><br>` : '';
+      return `<div class="notice-item"><div class="notice-date">${n.date}</div><div class="notice-text"><span class="notice-badge badge-new">নতুন</span> <span class="notice-badge badge-imp">${escapeHtml(getTargetLabel(n.target))}</span><br>${titleHtml}${imgHtml}</div></div>`;
+    };
+    const active=store.notices.filter(isNoticeActiveOnHome).slice(0,5);
+    home.innerHTML=active.length ? active.map(noticeCard).join('') : `<div class="notice-item"><div class="notice-date">--</div><div class="notice-text">হোম পেজে সক্রিয় নোটিশ নেই।</div></div>`;
+    full.innerHTML=store.notices.map(n=>{
+      const imgHtml = n.imageUrl ? `<img src="${n.imageUrl}" alt="নোটিশ" style="width:100%;max-height:400px;object-fit:contain;border-radius:10px;margin-top:8px;border:1px solid var(--light);background:#fff;display:block;">` : '';
+      const titleHtml = n.title ? `<strong>${escapeHtml(n.title)}</strong>` : '';
+      return `<li>${titleHtml}${imgHtml}<div class="ndate">📅 ${n.date} · ${escapeHtml(getTargetLabel(n.target))}${n.expireDate?' · হোমে শেষ: '+n.expireDate:''}</div></li>`;
+    }).join('');
   }
 
   function renderUpcomingExams() {
@@ -974,12 +1437,12 @@
     const upcoming=Object.entries(store.practicalClasses)
       .map(([year,ci])=>{
         const dt=typeof ci==='string'?'':(ci?.dateTime||'');
-        return {year,date:parseExamDate(dt),body:typeof ci==='string'?'':(ci?.body||''),url:typeof ci==='string'?ci:(ci?.url||''),dateTime:dt};
+        return {year,date:parseExamDate(dt),body:typeof ci==='string'?ci:(ci?.body||''),dateTime:dt};
       }).filter(i=>i.date&&i.date.getTime()>=now.getTime()).sort((a,b)=>a.date-b.date);
     if(!upcoming.length) { board.innerHTML=`<div class="notice-item"><div class="notice-date">--</div><div class="notice-text">এখনো কোনো আসন্ন ব্যবহারিক ক্লাসের তারিখ সেভ করা নেই।</div></div>`; return; }
     board.innerHTML=upcoming.map(item=>{
       const rem=item.date.getTime()-now.getTime();
-      return `<div class="notice-item"><div class="notice-date">${formatCountdown(rem)}</div><div class="notice-text"><span class="notice-badge badge-practical">ব্যবহারিক ক্লাস</span><br><strong>${escapeHtml(item.year)}</strong><br>তারিখ: ${escapeHtml(formatExamDateTime(item.dateTime))}<br>${item.body?escapeHtml(item.body)+'<br>':''}${item.url?`<a href="${escapeHtml(item.url)}" target="_blank" style="color:var(--secondary);font-weight:600;font-size:13px;">🔗 ক্লাস লিংক খুলুন</a>`:''}</div></div>`;
+      return `<div class="notice-item"><div class="notice-date">${formatCountdown(rem)}</div><div class="notice-text"><span class="notice-badge badge-practical">ব্যবহারিক ক্লাস</span><br><strong>${escapeHtml(item.year)}</strong><br>তারিখ: ${escapeHtml(formatExamDateTime(item.dateTime))}<br>${item.body?escapeHtml(item.body):''}</div></div>`;
     }).join('');
   }
 
@@ -1000,19 +1463,56 @@
     const board=document.getElementById('homeAssignmentBoard'); if(!board) return;
     const entries=Object.entries(store.assignments);
     if(!entries.length) { board.innerHTML=`<div class="notice-board"><div class="notice-item"><div class="notice-date">--</div><div class="notice-text">এখনো কোনো অ্যাসাইনমেন্ট যোগ করা হয়নি।</div></div></div>`; return; }
-    board.innerHTML=entries.map(([year,v])=>`<div class="assign-card"><span class="assign-year">${escapeHtml(year)}</span><div class="assign-title">📄 ${escapeHtml(v.title)}</div><div class="assign-body">${escapeHtml(v.body)}</div></div>`).join('');
+    board.innerHTML=entries.map(([year,v])=>`<div class="assign-card"><span class="assign-year">${escapeHtml(year)}</span><div class="assign-title">📄 ${escapeHtml(v.title)}</div>${v.dueDate?`<div class="assign-body"><strong>জমার তারিখ:</strong> ${escapeHtml(formatExamDateTime(v.dueDate))}</div>`:''}<div class="assign-body">${escapeHtml(v.body)}</div></div>`).join('');
   }
 
-  async function saveRoutine() {
-    const y=document.getElementById('routineYear').value;
-    const v=document.getElementById('routineBody').value.trim();
-    const fi=document.getElementById('routineFile'); const file=fi.files[0];
-    if(!v&&!file) return;
-    const old=store.routines[y]||{};
-    const fileUrl=file?await readFileAsDataUrl(file):(old.fileUrl||'');
-    store.routines[y]={body:v,fileName:file?file.name:(old.fileName||''),fileUrl};
-    saveStore(); document.getElementById('routineBody').value=''; fi.value='';
-    renderAdminRoutineList(); showSuccess('routineSuccess');
+  function addRoutineInputRow() {
+    const tbody = document.getElementById('classRoutineRows');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" class="routine-time" placeholder="যেমন: 09:00-10:00"></td>
+      <td><input type="text" class="routine-class" placeholder="যেমন: ৩য় বর্ষ Real Analysis - শিক্ষক: ..."></td>
+      <td><button class="btn-delete" type="button" onclick="deleteRoutineInputRow(this)">ডিলিট</button></td>`;
+    tbody.appendChild(tr);
+  }
+
+  function deleteRoutineInputRow(btn) {
+    const tbody = document.getElementById('classRoutineRows');
+    if(tbody.rows.length === 1) {
+      tbody.querySelector('.routine-time').value = '';
+      tbody.querySelector('.routine-class').value = '';
+      return;
+    }
+    btn.closest('tr').remove();
+  }
+
+  function saveClassRoutineTable() {
+    const year = document.getElementById('classRoutineYear').value;
+    const day = document.getElementById('classRoutineDay').value;
+    const rows = [...document.querySelectorAll('#classRoutineRows tr')];
+    const items = [];
+    for(const row of rows) {
+      const time = row.querySelector('.routine-time')?.value.trim() || '';
+      const classText = row.querySelector('.routine-class')?.value.trim() || '';
+      if(!time && !classText) continue;
+      if(!time || !classText) { showError('classRoutineError','প্রতিটি সারিতে সময় এবং কার / কোন ক্লাস দুটোই লিখুন।'); return; }
+      items.push({ year, day, time, subject: classText, note: '', createdAt: new Date().toISOString() });
+    }
+    if(!items.length) { showError('classRoutineError','টেবিলে অন্তত একটি ক্লাস লিখুন।'); return; }
+    store.classRoutine.push(...items);
+    if(!saveStore()) return;
+    document.getElementById('classRoutineRows').innerHTML = `
+      <tr>
+        <td><input type="text" class="routine-time" placeholder="যেমন: 09:00-10:00"></td>
+        <td><input type="text" class="routine-class" placeholder="যেমন: ৩য় বর্ষ Real Analysis - শিক্ষক: ..."></td>
+        <td><button class="btn-delete" type="button" onclick="deleteRoutineInputRow(this)">ডিলিট</button></td>
+      </tr>`;
+    renderAdminClassRoutineList();
+    renderMyUpdates();
+    showSuccess('classRoutineSuccess');
+    if(day === getTodayName()) {
+      sendLocalNotification('আজকের ক্লাস রুটিন আপডেট', `${year}: ${items.length}টি ক্লাস যোগ হয়েছে`, year);
+    }
   }
 
   function saveExam() {
@@ -1022,33 +1522,37 @@
     const v=document.getElementById('examBody').value.trim();
     if(!v){showError('examError','পরীক্ষার তথ্য লিখে তারপর সেভ করুন।');return;}
     const d=parseExamDate(dt); if(!d){showError('examError','পরীক্ষার তারিখ নির্বাচন করুন।');return;}
-    store.exams[`${y} - ${type}`]={body:v,dateTime:d.toISOString()};
+    store.exams[`${y} - ${type}`]={body:v,dateTime:d.toISOString(),createdAt:new Date().toISOString()};
     if(!saveStore()) return;
     document.getElementById('examBody').value=''; document.getElementById('examDate').value=''; document.getElementById('examTime').value='';
-    renderUpcomingExams(); renderAdminExamList(); showSuccess('examSuccess');
+    renderUpcomingExams(); renderAdminExamList(); renderMyUpdates(); showSuccess('examSuccess');
+    sendLocalNotification('নতুন পরীক্ষার আপডেট', `${y} ${type}: ${formatExamDateTime(d.toISOString())}`, y);
   }
 
   function saveAssign() {
     const y=document.getElementById('assignYear').value;
     const t=document.getElementById('assignTitle').value.trim();
     const b=document.getElementById('assignBody').value.trim();
+    const dueDate=document.getElementById('assignDueDate')?.value || '';
     if(!t||!b) return;
-    store.assignments[y]={title:t,body:b}; saveStore();
+    store.assignments[y]={title:t,body:b,dueDate,createdAt:new Date().toISOString()}; saveStore();
     document.getElementById('assignTitle').value=''; document.getElementById('assignBody').value='';
-    renderHomeAssignments(); renderAdminAssignList(); showSuccess('assignSuccess');
+    if(document.getElementById('assignDueDate')) document.getElementById('assignDueDate').value='';
+    renderHomeAssignments(); renderAdminAssignList(); renderMyUpdates(); showSuccess('assignSuccess');
+    sendLocalNotification('নতুন অ্যাসাইনমেন্ট', `${y}: ${t}${dueDate ? ' · জমা: ' + formatExamDateTime(dueDate) : ''}`, y);
   }
 
   function savePracticalClassUrl() {
     const y=document.getElementById('practicalClassYear').value;
-    const url=document.getElementById('practicalClassUrl').value.trim();
     const dt=getExamDT('practicalClassDate','practicalClassTime');
     const body=document.getElementById('practicalClassBody').value.trim();
     if(!body){showError('practicalClassError','ব্যবহারিক ক্লাসের তথ্য লিখে তারপর সেভ করুন।');return;}
     const d=parseExamDate(dt); if(!d){showError('practicalClassError','ব্যবহারিক ক্লাসের তারিখ নির্বাচন করুন।');return;}
-    store.practicalClasses[y]={url,body,dateTime:d.toISOString()}; saveStore();
-    document.getElementById('practicalClassUrl').value=''; document.getElementById('practicalClassBody').value='';
+    store.practicalClasses[y]={body,dateTime:d.toISOString(),createdAt:new Date().toISOString()}; saveStore();
+    document.getElementById('practicalClassBody').value='';
     document.getElementById('practicalClassDate').value=''; document.getElementById('practicalClassTime').value='';
-    renderUpcomingPracticalClasses(); renderAdminPracticalClassList(); showSuccess('practicalClassSuccess');
+    renderUpcomingPracticalClasses(); renderAdminPracticalClassList(); renderMyUpdates(); showSuccess('practicalClassSuccess');
+    sendLocalNotification('নতুন ব্যবহারিক ক্লাস', `${y}: ${formatExamDateTime(d.toISOString())}`, y);
   }
 
   function savePracticalExam() {
@@ -1057,10 +1561,25 @@
     const v=document.getElementById('practicalExamBody').value.trim();
     if(!v){showError('practicalExamError','ব্যবহারিক পরীক্ষার তথ্য লিখে তারপর সেভ করুন।');return;}
     const d=parseExamDate(dt); if(!d){showError('practicalExamError','ব্যবহারিক পরীক্ষার তারিখ নির্বাচন করুন।');return;}
-    store.practicalExams[y]={body:v,dateTime:d.toISOString()};
+    store.practicalExams[y]={body:v,dateTime:d.toISOString(),createdAt:new Date().toISOString()};
     if(!saveStore()) return;
     document.getElementById('practicalExamBody').value=''; document.getElementById('practicalExamDate').value=''; document.getElementById('practicalExamTime').value='';
-    renderUpcomingPracticalExams(); renderAdminPracticalExamList(); showSuccess('practicalExamSuccess');
+    renderUpcomingPracticalExams(); renderAdminPracticalExamList(); renderMyUpdates(); showSuccess('practicalExamSuccess');
+    sendLocalNotification('নতুন ব্যবহারিক পরীক্ষা', `${y}: ${formatExamDateTime(d.toISOString())}`, y);
+  }
+
+  function saveHoliday() {
+    const date = document.getElementById('holidayDate').value;
+    const title = document.getElementById('holidayTitle').value.trim() || 'সরকারি ছুটি';
+    if(!date) { showError('holidayError','বন্ধের তারিখ নির্বাচন করুন।'); return; }
+    store.holidays = (store.holidays || []).filter(item => item.date !== date);
+    store.holidays.push({ date, title, createdAt: new Date().toISOString() });
+    store.holidays.sort((a,b) => a.date.localeCompare(b.date));
+    if(!saveStore()) return;
+    document.getElementById('holidayDate').value = '';
+    document.getElementById('holidayTitle').value = '';
+    renderAdminHolidayList();
+    showSuccess('holidaySuccess');
   }
 
   function attachDeleteHandlers(container) {
@@ -1073,37 +1592,43 @@
           const item = store.notices[idx];
           if (!item || !confirm(`"${item.title}" নোটিশটি মুছে ফেলতে চান?`)) return;
           store.notices.splice(idx, 1);
-          saveStore(); renderNotices(); renderAdminNoticeList();
+          saveStore(); renderNotices(); renderAdminNoticeList(); renderMyUpdates();
 
-        } else if (type === 'routine') {
-          const key = Object.keys(store.routines)[idx];
-          if (!key || !confirm(`"${key}" এর রুটিন মুছে ফেলতে চান?`)) return;
-          delete store.routines[key];
-          saveStore(); renderAdminRoutineList();
+        } else if (type === 'classRoutine') {
+          const item = store.classRoutine[idx];
+          if (!item || !confirm(`"${item.year} ${item.day} ${item.subject}" ক্লাসটি মুছে ফেলতে চান?`)) return;
+          store.classRoutine.splice(idx, 1);
+          saveStore(); renderAdminClassRoutineList(); renderMyUpdates();
 
         } else if (type === 'exam') {
           const key = Object.keys(store.exams)[idx];
           if (!key || !confirm(`"${key}" পরীক্ষার তথ্য মুছে ফেলতে চান?`)) return;
           delete store.exams[key];
-          saveStore(); renderUpcomingExams(); renderAdminExamList();
+          saveStore(); renderUpcomingExams(); renderAdminExamList(); renderMyUpdates();
 
         } else if (type === 'practicalClass') {
           const key = Object.keys(store.practicalClasses)[idx];
           if (!key || !confirm(`"${key}" ব্যবহারিক ক্লাসের তথ্য মুছে ফেলতে চান?`)) return;
           delete store.practicalClasses[key];
-          saveStore(); renderUpcomingPracticalClasses(); renderAdminPracticalClassList();
+          saveStore(); renderUpcomingPracticalClasses(); renderAdminPracticalClassList(); renderMyUpdates();
 
         } else if (type === 'practicalExam') {
           const key = Object.keys(store.practicalExams)[idx];
           if (!key || !confirm(`"${key}" ব্যবহারিক পরীক্ষার তথ্য মুছে ফেলতে চান?`)) return;
           delete store.practicalExams[key];
-          saveStore(); renderUpcomingPracticalExams(); renderAdminPracticalExamList();
+          saveStore(); renderUpcomingPracticalExams(); renderAdminPracticalExamList(); renderMyUpdates();
 
         } else if (type === 'assign') {
           const key = Object.keys(store.assignments)[idx];
           if (!key || !confirm(`"${key}" এর অ্যাসাইনমেন্ট মুছে ফেলতে চান?`)) return;
           delete store.assignments[key];
-          saveStore(); renderHomeAssignments(); renderAdminAssignList();
+          saveStore(); renderHomeAssignments(); renderAdminAssignList(); renderMyUpdates();
+
+        } else if (type === 'holiday') {
+          const item = store.holidays[idx];
+          if (!item || !confirm(`"${item.title}" বন্ধের দিনটি মুছে ফেলতে চান?`)) return;
+          store.holidays.splice(idx, 1);
+          saveStore(); renderAdminHolidayList();
         }
       });
     });
@@ -1113,21 +1638,24 @@
     const el=document.getElementById('adminNoticeList'); if(!el) return;
     if(!store.notices.length){el.innerHTML='<p class="empty-list">কোনো নোটিশ নেই।</p>';return;}
     el.innerHTML=store.notices.map((n,i)=>`
-      <div class="admin-saved-item">
-        <div class="item-text"><strong>${escapeHtml(n.title)}</strong><span>${escapeHtml(n.body.slice(0,60))}${n.body.length>60?'…':''}</span><span>📅 ${n.date}${n.expireDate?' · শেষ: '+n.expireDate:''}</span></div>
+      <div class="admin-saved-item" style="align-items:center;">
+        ${n.imageUrl?`<img src="${n.imageUrl}" alt="নোটিশ" style="width:60px;height:48px;object-fit:cover;border-radius:6px;flex-shrink:0;border:1px solid var(--light);">`:''} 
+        <div class="item-text"><strong>${escapeHtml(n.title||'(শুধু ছবি)')}</strong><span>📅 ${n.date} · ${escapeHtml(getTargetLabel(n.target))}${n.expireDate?' · শেষ: '+n.expireDate:''}</span></div>
         <button class="btn-delete" data-type="notice" data-index="${i}">🗑️ ডিলিট</button>
       </div>`).join('');
     attachDeleteHandlers(el);
   }
 
-  function renderAdminRoutineList() {
-    const el=document.getElementById('adminRoutineList'); if(!el) return;
-    const entries=Object.entries(store.routines);
-    if(!entries.length){el.innerHTML='<p class="empty-list">কোনো রুটিন নেই।</p>';return;}
-    el.innerHTML=entries.map(([year,v],i)=>`
+  function renderAdminClassRoutineList() {
+    const el=document.getElementById('adminClassRoutineList'); if(!el) return;
+    const items=(store.classRoutine || [])
+      .map((item,index)=>({...item,index}))
+      .sort((a,b)=>(a.year+a.day+a.time).localeCompare(b.year+b.day+b.time));
+    if(!items.length){el.innerHTML='<p class="empty-list">অটো আপডেটের জন্য কোনো ক্লাস রুটিন নেই।</p>';return;}
+    el.innerHTML=items.map(item=>`
       <div class="admin-saved-item">
-        <div class="item-text"><strong>${escapeHtml(year)}</strong><span>${escapeHtml((v.body||'').slice(0,50))}${(v.body||'').length>50?'…':''}</span>${v.fileName?`<span>📎 ${escapeHtml(v.fileName)}</span>`:''}</div>
-        <button class="btn-delete" data-type="routine" data-index="${i}">🗑️ ডিলিট</button>
+        <div class="item-text"><strong>${escapeHtml(item.year)} · ${escapeHtml(item.day)} · ${escapeHtml(item.time)}</strong><span>${escapeHtml(item.subject)}${item.note?' · '+escapeHtml(item.note):''}</span></div>
+        <button class="btn-delete" data-type="classRoutine" data-index="${item.index}">🗑️ ডিলিট</button>
       </div>`).join('');
     attachDeleteHandlers(el);
   }
@@ -1177,13 +1705,25 @@
     if(!entries.length){el.innerHTML='<p class="empty-list">কোনো অ্যাসাইনমেন্ট নেই।</p>';return;}
     el.innerHTML=entries.map(([year,v],i)=>`
       <div class="admin-saved-item">
-        <div class="item-text"><strong>${escapeHtml(year)}: ${escapeHtml(v.title)}</strong><span>${escapeHtml(v.body.slice(0,60))}${v.body.length>60?'…':''}</span></div>
+        <div class="item-text"><strong>${escapeHtml(year)}: ${escapeHtml(v.title)}</strong>${v.dueDate?`<span>📅 জমার তারিখ: ${escapeHtml(formatExamDateTime(v.dueDate))}</span>`:''}<span>${escapeHtml(v.body.slice(0,60))}${v.body.length>60?'…':''}</span></div>
         <button class="btn-delete" data-type="assign" data-index="${i}">🗑️ ডিলিট</button>
       </div>`).join('');
     attachDeleteHandlers(el);
   }
 
-  const ADMIN_TABS = ['tabNotice','tabRoutine','tabExam','tabPractical','tabAssign'];
+  function renderAdminHolidayList() {
+    const el=document.getElementById('adminHolidayList'); if(!el) return;
+    const items=(store.holidays || []).map((item,index)=>({...item,index})).sort((a,b)=>a.date.localeCompare(b.date));
+    if(!items.length){el.innerHTML='<p class="empty-list">কোনো বিশেষ বন্ধের দিন সেভ করা নেই।</p>';return;}
+    el.innerHTML=items.map((item,i)=>`
+      <div class="admin-saved-item">
+        <div class="item-text"><strong>${escapeHtml(item.title || 'সরকারি ছুটি')}</strong><span>📅 ${escapeHtml(formatExamDateTime(item.date))}</span></div>
+        <button class="btn-delete" data-type="holiday" data-index="${item.index}">🗑️ ডিলিট</button>
+      </div>`).join('');
+    attachDeleteHandlers(el);
+  }
+
+  const ADMIN_TABS = ['tabNotice','tabRoutine','tabExam','tabPractical','tabAssign','tabHoliday'];
 
   function switchTab(tabId, btn) {
     ADMIN_TABS.forEach(id => {
@@ -1197,8 +1737,9 @@
     renderAdminTabById(tabId);
   }
 
-  renderNotices(); renderUpcomingExams(); renderUpcomingPracticalClasses(); renderUpcomingPracticalExams(); renderHomeAssignments();
-  setInterval(()=>{ renderUpcomingExams(); renderUpcomingPracticalClasses(); renderUpcomingPracticalExams(); }, 60000);
+  renderAll();
+  initRemoteSync();
+  setInterval(()=>{ renderUpcomingExams(); renderUpcomingPracticalClasses(); renderUpcomingPracticalExams(); notifyTodayStudyUpdates(); }, 60000);
 </script>
 </body>
 </html>
