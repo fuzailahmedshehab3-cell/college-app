@@ -137,6 +137,11 @@
   .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
   .admin-header h2 { font-size: 1.3rem; color: var(--primary); }
   .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--muted); }
+  .sync-status { margin: -10px 0 18px; padding: 10px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; line-height: 1.5; border: 1px solid transparent; }
+  .sync-status.ok { background: #e8f5e9; color: #1b5e20; border-color: #c8e6c9; }
+  .sync-status.warn { background: #fff8e1; color: #795548; border-color: #ffe082; }
+  .sync-status.error { background: #ffebee; color: #b71c1c; border-color: #ffcdd2; }
+  .sync-status.pending { background: #e3f2fd; color: #0d47a1; border-color: #bbdefb; }
   .admin-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
   .admin-tab { padding: 8px 18px; border-radius: 20px; border: 2px solid var(--light); font-size: 13px; font-weight: 600; cursor: pointer; background: var(--gray); color: var(--muted); transition: .2s; font-family: 'Hind Siliguri', sans-serif; }
   .admin-tab.active { background: var(--secondary); color: white; border-color: var(--secondary); }
@@ -145,6 +150,10 @@
   .admin-form input:focus, .admin-form textarea:focus { border-color: var(--secondary); }
   .admin-form textarea { min-height: 90px; resize: vertical; }
   .admin-form label { font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: -6px; }
+  .class-notify-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+  .class-notify-option { display: flex; align-items: center; gap: 8px; background: var(--gray); border: 1px solid var(--light); border-radius: 8px; padding: 9px 10px; font-size: 13px; font-weight: 700; color: var(--primary); cursor: pointer; }
+  .class-notify-option input { width: auto; padding: 0; border: 0; }
+  .class-notify-actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-primary { background: linear-gradient(90deg, var(--primary), var(--secondary)); color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Hind Siliguri', sans-serif; transition: opacity .2s; }
   .btn-primary:hover { opacity: .88; }
 
@@ -202,7 +211,11 @@
   .student-actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-secondary { background: var(--light); color: var(--primary); border: 0; padding: 11px 18px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Hind Siliguri', sans-serif; }
   .btn-secondary:hover { background: #d9e7fd; }
+  .btn-warning { background: #fff3e0; color: #bf360c; border: 0; padding: 11px 18px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Hind Siliguri', sans-serif; }
+  .btn-warning:hover { background: #ffe0b2; }
   .student-status { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; color: #2e7d32; border-radius: 16px; padding: 4px 10px; font-size: 12px; font-weight: 700; margin-top: 8px; }
+  .student-status.off { background: #fff3e0; color: #bf360c; }
+  .student-status.error { background: #ffebee; color: #b71c1c; }
   .student-form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
   .student-form label { color: var(--primary); font-size: 13px; font-weight: 700; }
   .student-form input, .student-form select { width: 100%; padding: 11px 14px; border: 2px solid var(--light); border-radius: 10px; font-size: 14px; font-family: 'Hind Siliguri', sans-serif; outline: none; }
@@ -273,11 +286,11 @@
         <div>
           <h3>🔔 আমার ক্লাস আপডেট</h3>
           <p id="studentProfileText">নিজের নাম, রেজিস্ট্রেশন নাম্বার ও বর্ষ সেভ করলে শুধু আপনার বর্ষের আপডেট এখানে দেখা যাবে।</p>
-          <span class="student-status" id="studentNotifyStatus" style="display:none;">নোটিফিকেশন চালু আছে</span>
+          <span class="student-status off" id="studentNotifyStatus">নোটিফিকেশন বন্ধ আছে</span>
         </div>
         <div class="student-actions">
           <button class="btn-secondary" onclick="openStudentModal()">আইডি খুলুন / আপডেট করুন</button>
-          <button class="btn-primary" onclick="enableNotifications()">নোটিফিকেশন চালু করুন</button>
+          <button class="btn-primary" id="notifyToggleBtn" onclick="toggleNotifications()">নোটিফিকেশন চালু করুন</button>
         </div>
       </div>
       <div class="my-update-list" id="myUpdateList">
@@ -489,7 +502,7 @@
       </select>
       <p id="studentError" style="color:red;font-size:13px;display:none;"></p>
       <button class="btn-primary" onclick="saveStudentProfile()">সেভ করুন</button>
-      <button class="btn-secondary" onclick="closeModal('studentModal')">বন্ধ করুন</button>
+      <button class="btn-secondary" id="studentModalCloseBtn" onclick="closeModal('studentModal')">বন্ধ করুন</button>
     </div>
   </div>
 </div>
@@ -587,6 +600,7 @@
         <h2>⚙️ এডমিন প্যানেল</h2>
         <button class="close-btn" onclick="closeAdmin()">✕</button>
       </div>
+      <div id="syncStatus" class="sync-status warn">ডেটা সিঙ্ক বন্ধ: Firebase config যোগ করা হয়নি।</div>
       <div class="admin-tabs">
         <button class="admin-tab active" onclick="switchTab('tabNotice',this)">📋 নোটিশ</button>
         <button class="admin-tab" onclick="switchTab('tabRoutine',this)">🗓️ রুটিন</button>
@@ -647,6 +661,16 @@
         <button class="btn-primary" onclick="saveClassRoutineTable()">ক্লাস টেবিল সেভ করুন</button>
         <p id="classRoutineSuccess" style="color:green;font-size:13px;display:none;">✅ ক্লাস রুটিনে যোগ হয়েছে!</p>
         <p id="classRoutineError" style="color:red;font-size:13px;display:none;"></p>
+        <div class="admin-saved-list">
+          <h4>🔕 বর্ষভিত্তিক ক্লাস নোটিফিকেশন</h4>
+          <label>যে বর্ষগুলোর ক্লাস বন্ধ/চালু করবেন</label>
+          <div class="class-notify-grid" id="classNotifyYearList"></div>
+          <p id="classNotifyStatusText" style="font-size:13px;color:var(--muted);line-height:1.6;"></p>
+          <div class="class-notify-actions">
+            <button class="btn-warning" onclick="setClassNotificationsForSelectedYears(true)">নির্বাচিত বর্ষের ক্লাস নোটিফিকেশন বন্ধ করুন</button>
+            <button class="btn-primary" onclick="setClassNotificationsForSelectedYears(false)">নির্বাচিত বর্ষের ক্লাস নোটিফিকেশন চালু করুন</button>
+          </div>
+        </div>
         <div class="admin-saved-list">
           <h4>🔔 অটো দৈনিক আপডেটের ক্লাস রুটিন</h4>
           <div id="adminClassRoutineList"></div>
@@ -761,6 +785,7 @@
   </div>
 </div>
 
+<script src="./firebase-config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
@@ -768,7 +793,7 @@
   const YEAR_OPTIONS = ['১ম বর্ষ','২য় বর্ষ','৩য় বর্ষ','৪র্থ বর্ষ','মাস্টার্স'];
   const DAY_OPTIONS = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
   const CLOSED_DAYS = ['শুক্রবার'];
-  const FIREBASE_CONFIG = {
+  const FIREBASE_CONFIG = window.MATH_SITE_FIREBASE_CONFIG || {
     apiKey: '',
     authDomain: '',
     databaseURL: '',
@@ -778,19 +803,24 @@
     appId: ''
   };
   const REMOTE_STORE_PATH = 'mathDepartmentSiteData';
+  const STUDENT_SHEET_OWNER_EMAIL = 'fuzailahmedshehab3@gmail.com';
+  const STUDENT_SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjweREkyTixI4Qim4pBzZGJxL0g12cZumZEThnfbygcNcsKredse1QnVpAHpeUs9U5/exec';
   const defaultStore = {
     notices: [], routines: {}, exams: {}, assignments: {},
     practicalClasses: {}, practicalExams: {},
     classRoutine: [],
+    classNotificationClosed: {},
     holidays: [],
     studentProfile: null, notificationsEnabled: false,
     loggedIn: false,
+    updatedAt: '',
     credentials: { user: 'admin', pass: 'math2025' }
   };
   let store = loadStore();
   let selectedExamYear = '';
   let remoteDb = null;
   let isApplyingRemoteStore = false;
+  let notificationRegistration = null;
 
   function normalizeStore(saved) {
     if(!saved) return {...defaultStore};
@@ -799,6 +829,7 @@
         credentials: defaultStore.credentials,
         practicalClasses: saved.practicalClasses || {},
         classRoutine: saved.classRoutine || [],
+        classNotificationClosed: saved.classNotificationClosed || {},
         holidays: saved.holidays || [],
         studentProfile: saved.studentProfile || null,
         notificationsEnabled: !!saved.notificationsEnabled
@@ -811,17 +842,35 @@
     } catch(e) { return {...defaultStore}; }
   }
 
+  function setRemoteSyncStatus(type, message) {
+    const el = document.getElementById('syncStatus');
+    if(!el) return;
+    el.className = `sync-status ${type}`;
+    el.textContent = message;
+  }
+
+  function getRemoteStorePayload() {
+    return {
+      ...store,
+      loggedIn: false,
+      studentProfile: null,
+      notificationsEnabled: false
+    };
+  }
+
   function saveStore() {
     try {
+      store.updatedAt = new Date().toISOString();
       localStorage.setItem(STORE_KEY, JSON.stringify(store));
       if(remoteDb && !isApplyingRemoteStore) {
-        remoteDb.ref(REMOTE_STORE_PATH).set({
-          ...store,
-          loggedIn: false,
-          studentProfile: null,
-          notificationsEnabled: false,
-          updatedAt: new Date().toISOString()
-        });
+        remoteDb.ref(REMOTE_STORE_PATH).set(getRemoteStorePayload())
+          .then(() => setRemoteSyncStatus('ok', 'ডেটা সিঙ্ক চালু আছে: আপডেট সব ডিভাইসে যাবে।'))
+          .catch(e => {
+            console.warn('Remote save failed:', e);
+            setRemoteSyncStatus('error', 'ডেটা শুধু এই ডিভাইসে সেভ হয়েছে: Firebase rules/config চেক করুন।');
+          });
+      } else if(!hasFirebaseConfig()) {
+        setRemoteSyncStatus('warn', 'ডেটা সিঙ্ক বন্ধ: firebase-config.js-এ Firebase config যোগ করুন।');
       }
       return true;
     }
@@ -844,9 +893,24 @@
     notifyTodayStudyUpdates();
   }
 
-  function initRemoteSync() {
-    if(!hasFirebaseConfig()) return;
+  async function initNotificationWorker() {
+    if(!('serviceWorker' in navigator) || !window.isSecureContext) return null;
     try {
+      notificationRegistration = await navigator.serviceWorker.register('./sw.js');
+      return notificationRegistration;
+    } catch(e) {
+      console.warn('Notification worker চালু করা যায়নি:', e);
+      return null;
+    }
+  }
+
+  function initRemoteSync() {
+    if(!hasFirebaseConfig()) {
+      setRemoteSyncStatus('warn', 'ডেটা সিঙ্ক বন্ধ: firebase-config.js-এ Firebase config যোগ করুন।');
+      return;
+    }
+    try {
+      setRemoteSyncStatus('pending', 'সার্ভারের সাথে সিঙ্ক চালু হচ্ছে...');
       if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
       remoteDb = firebase.database();
       remoteDb.ref(REMOTE_STORE_PATH).on('value', snapshot => {
@@ -855,6 +919,14 @@
           saveStore();
           return;
         }
+        const localUpdatedAt = Date.parse(store.updatedAt || '') || 0;
+        const remoteUpdatedAt = Date.parse(remoteStore.updatedAt || '') || 0;
+        if(localUpdatedAt > remoteUpdatedAt && !isApplyingRemoteStore) {
+          saveStore();
+          return;
+        }
+        const previousStore = store;
+        const shouldNotifyRemoteChanges = localUpdatedAt > 0 && remoteUpdatedAt > localUpdatedAt;
         isApplyingRemoteStore = true;
         const localStudentProfile = store.studentProfile;
         const localNotificationsEnabled = store.notificationsEnabled;
@@ -867,10 +939,16 @@
         });
         localStorage.setItem(STORE_KEY, JSON.stringify(store));
         isApplyingRemoteStore = false;
+        setRemoteSyncStatus('ok', 'ডেটা সিঙ্ক চালু আছে: অন্য ডিভাইসের আপডেট পাওয়া যাচ্ছে।');
         renderAll();
+        if(shouldNotifyRemoteChanges) notifyRemoteStoreChanges(previousStore, store);
+      }, e => {
+        console.warn('Remote sync failed:', e);
+        setRemoteSyncStatus('error', 'Firebase sync চালু হয়নি: databaseURL বা Realtime Database rules চেক করুন।');
       });
     } catch(e) {
       console.warn('Remote sync চালু করা যায়নি:', e);
+      setRemoteSyncStatus('error', 'Firebase sync চালু করা যায়নি: config ঠিক আছে কিনা দেখুন।');
     }
   }
 
@@ -894,51 +972,207 @@
   function isTargetForStudent(target) {
     return !!store.studentProfile && (!target || target==='all' || target===store.studentProfile.year);
   }
+  function isStudentSheetConfigured() {
+    return /^https:\/\/script\.google\.com\/macros\/s\//.test(STUDENT_SHEET_SCRIPT_URL);
+  }
+  function isStudentProfileRequired() {
+    return !store.studentProfile;
+  }
+  function openRequiredStudentModal() {
+    openStudentModal(true);
+  }
+  function makeStudentId() {
+    if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return `student-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+  function submitStudentProfileToSheet(profile) {
+    if(!isStudentSheetConfigured()) return Promise.resolve(false);
+    const payload = {
+      ownerEmail: STUDENT_SHEET_OWNER_EMAIL,
+      studentId: profile.studentId || '',
+      name: profile.name || '',
+      regNo: profile.regNo || '',
+      year: profile.year || '',
+      createdAt: profile.createdAt || '',
+      updatedAt: profile.updatedAt || '',
+      pageUrl: location.href,
+      userAgent: navigator.userAgent
+    };
+    return fetch(STUDENT_SHEET_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(() => true).catch(e => {
+      console.warn('Student sheet save failed:', e);
+      return false;
+    });
+  }
+  function isClassNotificationClosed(year) {
+    return !!(year && store.classNotificationClosed && store.classNotificationClosed[year]);
+  }
   function makeUpdate(type, title, body, target, dateTime) {
     return { type, title, body, target: target || 'all', dateTime: dateTime || '', createdAt: new Date().toISOString() };
   }
 
-  function openStudentModal() {
+  function openStudentModal(required = false) {
     const profile = store.studentProfile || {};
     document.getElementById('studentName').value = profile.name || '';
     document.getElementById('studentRegNo').value = profile.regNo || '';
     document.getElementById('studentYear').value = profile.year || '১ম বর্ষ';
     document.getElementById('studentError').style.display = 'none';
+    const closeBtn = document.getElementById('studentModalCloseBtn');
+    if(closeBtn) closeBtn.style.display = required ? 'none' : '';
+    document.getElementById('studentModal').dataset.required = required ? 'true' : 'false';
     document.getElementById('studentModal').classList.add('open');
   }
 
-  function saveStudentProfile() {
+  async function saveStudentProfile() {
     const name = document.getElementById('studentName').value.trim();
     const regNo = document.getElementById('studentRegNo').value.trim();
     const year = document.getElementById('studentYear').value;
     if(!name || !regNo) { showError('studentError','নাম ও রেজিস্ট্রেশন নাম্বার লিখুন।'); return; }
-    store.studentProfile = { name, regNo, year };
+    const previousProfile = store.studentProfile || {};
+    const now = new Date().toISOString();
+    store.studentProfile = {
+      studentId: previousProfile.studentId || makeStudentId(),
+      name,
+      regNo,
+      year,
+      createdAt: previousProfile.createdAt || now,
+      updatedAt: now
+    };
     if(!saveStore()) return;
+    await submitStudentProfileToSheet(store.studentProfile);
     closeModal('studentModal');
     renderStudentPanel();
     renderMyUpdates();
     notifyTodayStudyUpdates();
   }
 
-  async function enableNotifications() {
+  function getNotificationProblem() {
     if(!('Notification' in window)) {
-      alert('এই ব্রাউজারে নোটিফিকেশন সাপোর্ট নেই।');
+      return 'এই ব্রাউজারে নোটিফিকেশন সাপোর্ট নেই।';
+    }
+    if(!window.isSecureContext) {
+      return 'মোবাইলে নোটিফিকেশন পেতে সাইটটি HTTPS লিংক থেকে খুলতে হবে। file:// বা সাধারণ http লিংকে নোটিফিকেশন কাজ নাও করতে পারে।';
+    }
+    return '';
+  }
+
+  async function enableNotifications() {
+    const problem = getNotificationProblem();
+    if(problem) { alert(problem); return; }
+    if(!store.studentProfile) {
+      alert('আগে আপনার নাম, রেজিস্ট্রেশন ও বর্ষ সেভ করুন। তারপর নোটিফিকেশন চালু করুন।');
+      openStudentModal();
       return;
     }
-    const permission = await Notification.requestPermission();
+    let permission = Notification.permission;
+    if(permission === 'default') permission = await Notification.requestPermission();
+    if(permission === 'denied') {
+      store.notificationsEnabled = false;
+      saveStore();
+      renderStudentPanel();
+      alert('নোটিফিকেশন permission বন্ধ আছে। মোবাইল/ব্রাউজারের Site settings থেকে Notifications Allow করে আবার চেষ্টা করুন।');
+      return;
+    }
     store.notificationsEnabled = permission === 'granted';
     saveStore();
     renderStudentPanel();
     if(store.notificationsEnabled) {
+      await initNotificationWorker();
       sendLocalNotification('গণিত বিভাগ', 'নোটিফিকেশন চালু হয়েছে। আপনার বর্ষের আপডেট পেলে জানানো হবে।', store.studentProfile?.year || 'all');
       notifyTodayStudyUpdates();
     }
   }
 
+  function disableNotifications() {
+    store.notificationsEnabled = false;
+    saveStore();
+    renderStudentPanel();
+    alert('নোটিফিকেশন বন্ধ করা হয়েছে।');
+  }
+
+  function toggleNotifications() {
+    if(store.notificationsEnabled) disableNotifications();
+    else enableNotifications();
+  }
+
   function sendLocalNotification(title, body, target) {
     if(isClosedDay()) return;
     if(!store.notificationsEnabled || !isTargetForStudent(target) || !('Notification' in window) || Notification.permission !== 'granted') return;
-    new Notification(title, { body });
+    const options = {
+      body,
+      tag: `math-dept-${String(target || 'all')}`,
+      renotify: true
+    };
+    if(notificationRegistration && notificationRegistration.showNotification) {
+      notificationRegistration.showNotification(title, options).catch(() => {
+        try { new Notification(title, options); } catch(e) { console.warn('Notification দেখানো যায়নি:', e); }
+      });
+      return;
+    }
+    try { new Notification(title, options); } catch(e) { console.warn('Notification দেখানো যায়নি:', e); }
+  }
+
+  function sendRemoteChangeNotification(key, title, body, target) {
+    if(isClosedDay() || !store.studentProfile || !store.notificationsEnabled || !isTargetForStudent(target)) return;
+    const storageKey = `remoteChangeNotify:${store.studentProfile.year}:${key}`;
+    if(localStorage.getItem(storageKey)) return;
+    localStorage.setItem(storageKey, 'sent');
+    sendLocalNotification(title, body, target);
+  }
+
+  function getNoticeKey(n) {
+    return `${n?.createdAt || ''}:${n?.date || ''}:${n?.target || 'all'}:${n?.title || ''}`;
+  }
+
+  function notifyRemoteStoreChanges(previousStore, nextStore) {
+    if(!previousStore || !nextStore || !store.studentProfile || !store.notificationsEnabled) return;
+
+    const oldNoticeKeys = new Set((previousStore.notices || []).map(getNoticeKey));
+    (nextStore.notices || []).forEach(n => {
+      const key = getNoticeKey(n);
+      if(!oldNoticeKeys.has(key)) {
+        sendRemoteChangeNotification(`notice:${key}`, 'নতুন নোটিশ', `${getTargetLabel(n.target)}: ${n.title || 'নোটিশ আপলোড হয়েছে'}`, n.target || 'all');
+      }
+    });
+
+    Object.entries(nextStore.exams || {}).forEach(([key, exam]) => {
+      const oldExam = previousStore.exams?.[key];
+      const changed = !oldExam || getExamBody(oldExam) !== getExamBody(exam) || getExamDateTime(oldExam) !== getExamDateTime(exam);
+      if(changed) {
+        sendRemoteChangeNotification(`exam:${key}:${getExamDateTime(exam)}:${getExamBody(exam)}`, 'নতুন পরীক্ষার আপডেট', `${key}: ${formatExamDateTime(getExamDateTime(exam))}`, key.split(' - ')[0]);
+      }
+    });
+
+    Object.entries(nextStore.practicalClasses || {}).forEach(([year, item]) => {
+      const oldItem = previousStore.practicalClasses?.[year];
+      const oldDt = typeof oldItem === 'string' ? '' : (oldItem?.dateTime || '');
+      const newDt = typeof item === 'string' ? '' : (item?.dateTime || '');
+      const oldBody = typeof oldItem === 'string' ? oldItem : (oldItem?.body || '');
+      const newBody = typeof item === 'string' ? item : (item?.body || '');
+      if(!oldItem || oldDt !== newDt || oldBody !== newBody) {
+        sendRemoteChangeNotification(`practical-class:${year}:${newDt}:${newBody}`, 'নতুন ব্যবহারিক ক্লাস', `${year}: ${formatExamDateTime(newDt)}`, year);
+      }
+    });
+
+    Object.entries(nextStore.practicalExams || {}).forEach(([year, exam]) => {
+      const oldExam = previousStore.practicalExams?.[year];
+      const changed = !oldExam || getExamBody(oldExam) !== getExamBody(exam) || getExamDateTime(oldExam) !== getExamDateTime(exam);
+      if(changed) {
+        sendRemoteChangeNotification(`practical-exam:${year}:${getExamDateTime(exam)}:${getExamBody(exam)}`, 'নতুন ব্যবহারিক পরীক্ষা', `${year}: ${formatExamDateTime(getExamDateTime(exam))}`, year);
+      }
+    });
+
+    Object.entries(nextStore.assignments || {}).forEach(([year, item]) => {
+      const oldItem = previousStore.assignments?.[year];
+      const changed = !oldItem || oldItem.title !== item?.title || oldItem.body !== item?.body || oldItem.dueDate !== item?.dueDate;
+      if(changed) {
+        sendRemoteChangeNotification(`assignment:${year}:${item?.title || ''}:${item?.dueDate || ''}:${item?.body || ''}`, 'নতুন অ্যাসাইনমেন্ট', `${year}: ${item?.title || 'অ্যাসাইনমেন্ট'}`, year);
+      }
+    });
   }
 
   function getTodayName() {
@@ -966,7 +1200,7 @@
   }
 
   function notifyDailyClassUpdate() {
-    if(isClosedDay() || !store.studentProfile || !store.notificationsEnabled) return;
+    if(isClosedDay() || !store.studentProfile || !store.notificationsEnabled || isClassNotificationClosed(store.studentProfile.year)) return;
     const todayKey = getLocalDateKey();
     const storageKey = `dailyClassNotify:${store.studentProfile.year}:${todayKey}`;
     if(localStorage.getItem(storageKey)) return;
@@ -997,7 +1231,7 @@
   function notifyTodayStudyUpdates() {
     if(isClosedDay() || !store.studentProfile || !store.notificationsEnabled) return;
     const year = store.studentProfile.year;
-    const todayClasses = getTodayClasses(year);
+    const todayClasses = isClassNotificationClosed(year) ? [] : getTodayClasses(year);
     if(todayClasses.length) {
       sendOncePerDayNotify(
         'classes',
@@ -1046,15 +1280,38 @@
 
   function parseExamDate(dt) {
     if(!dt) return null;
-    const s = String(dt).includes('T') ? String(dt) : String(dt).replace(' ','T');
+    const raw = String(dt).trim();
+    const localParts = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2})(?::(\d{2}))?)?$/);
+    if(localParts && !/[zZ]|[+-]\d{2}:?\d{2}$/.test(raw)) {
+      const [, y, m, day, h='0', min='0', sec='0'] = localParts;
+      const localDate = new Date(Number(y), Number(m)-1, Number(day), Number(h), Number(min), Number(sec));
+      return isNaN(localDate.getTime()) ? null : localDate;
+    }
+    const s = raw.includes('T') ? raw : raw.replace(' ','T');
     const d = new Date(s);
     return isNaN(d.getTime()) ? null : d;
+  }
+
+  function hasExamTime(dt) {
+    if(!dt) return false;
+    const raw = String(dt).trim();
+    if(/^\d{4}-\d{2}-\d{2}$/.test(raw)) return false;
+    const d = parseExamDate(raw);
+    return !!d && !(d.getHours()===0 && d.getMinutes()===0 && d.getSeconds()===0 && d.getMilliseconds()===0);
+  }
+
+  function getUpcomingUntil(dt) {
+    const d = parseExamDate(dt);
+    if(!d) return null;
+    if(hasExamTime(dt)) return d;
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
   }
 
   function formatExamDateTime(dt) {
     if(!dt) return 'তারিখ নির্ধারণ করা হয়নি';
     const d = parseExamDate(dt);
     if(!d) return 'তারিখ নির্ধারণ করা হয়নি';
+    if(!hasExamTime(dt)) return d.toLocaleDateString('bn-BD', {year:'numeric',month:'long',day:'numeric'});
     return d.toLocaleString('bn-BD', {year:'numeric',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'});
   }
 
@@ -1071,8 +1328,8 @@
 
   function getExamDT(idDate, idTime) {
     const date = document.getElementById(idDate)?.value||'';
-    const time = document.getElementById(idTime)?.value||'00:00';
-    return date ? `${date}T${time}` : '';
+    const time = document.getElementById(idTime)?.value||'';
+    return date ? (time ? `${date}T${time}` : date) : '';
   }
 
   function formatCountdown(ms) {
@@ -1244,7 +1501,12 @@
     }
   }
 
-  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+    if(!modal) return;
+    if(id === 'studentModal' && modal.dataset.required === 'true' && !store.studentProfile) return;
+    modal.classList.remove('open');
+  }
   function openDeveloper() { document.getElementById('devModal').classList.add('open'); }
   function openAttendance() { document.getElementById('attendModal').classList.add('open'); }
   function openResult() { document.getElementById('resultModal').classList.add('open'); }
@@ -1252,12 +1514,17 @@
   function openFormCheck() { document.getElementById('formCheckModal').classList.add('open'); }
 
   document.querySelectorAll('.modal-overlay').forEach(m => {
-    m.addEventListener('click', function(e) { if(e.target===this) this.classList.remove('open'); });
+    m.addEventListener('click', function(e) {
+      if(e.target !== this) return;
+      if(this.id === 'studentModal' && this.dataset.required === 'true' && !store.studentProfile) return;
+      this.classList.remove('open');
+    });
   });
 
   function renderStudentPanel() {
     const text = document.getElementById('studentProfileText');
     const status = document.getElementById('studentNotifyStatus');
+    const notifyBtn = document.getElementById('notifyToggleBtn');
     if(!text || !status) return;
     const profile = store.studentProfile;
     if(profile) {
@@ -1265,7 +1532,29 @@
     } else {
       text.textContent = 'নিজের নাম, রেজিস্ট্রেশন নাম্বার ও বর্ষ সেভ করলে শুধু আপনার বর্ষের আপডেট এখানে দেখা যাবে।';
     }
-    status.style.display = store.notificationsEnabled ? 'inline-flex' : 'none';
+    let statusText = 'নোটিফিকেশন বন্ধ আছে';
+    let statusClass = 'student-status off';
+    if(!('Notification' in window)) {
+      statusText = 'এই ব্রাউজারে নোটিফিকেশন সাপোর্ট নেই';
+      statusClass = 'student-status error';
+    } else if(Notification.permission === 'denied') {
+      statusText = 'নোটিফিকেশন permission বন্ধ';
+      statusClass = 'student-status error';
+      store.notificationsEnabled = false;
+    } else if(store.notificationsEnabled && Notification.permission === 'granted') {
+      statusText = 'নোটিফিকেশন চালু আছে';
+      statusClass = 'student-status';
+    } else if(Notification.permission === 'granted') {
+      statusText = 'নোটিফিকেশন permission আছে, কিন্তু বন্ধ রাখা হয়েছে';
+      statusClass = 'student-status off';
+    }
+    status.textContent = statusText;
+    status.className = statusClass;
+    status.style.display = 'inline-flex';
+    if(notifyBtn) {
+      notifyBtn.textContent = store.notificationsEnabled ? 'নোটিফিকেশন বন্ধ করুন' : 'নোটিফিকেশন চালু করুন';
+      notifyBtn.className = store.notificationsEnabled ? 'btn-warning' : 'btn-primary';
+    }
   }
 
   function renderMyUpdates() {
@@ -1321,7 +1610,7 @@
 
   function renderAdminTabById(tabId) {
     if(tabId==='tabNotice') renderAdminNoticeList();
-    else if(tabId==='tabRoutine') renderAdminClassRoutineList();
+    else if(tabId==='tabRoutine') { renderClassNotificationControls(); renderAdminClassRoutineList(); }
     else if(tabId==='tabExam') renderAdminExamList();
     else if(tabId==='tabPractical') { renderAdminPracticalClassList(); renderAdminPracticalExamList(); }
     else if(tabId==='tabAssign') renderAdminAssignList();
@@ -1347,6 +1636,39 @@
 
   function showSuccess(id) { const el=document.getElementById(id); el.style.display='block'; setTimeout(()=>el.style.display='none',2500); }
   function showError(id, msg) { const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
+
+  function renderClassNotificationControls() {
+    const listEl = document.getElementById('classNotifyYearList');
+    const statusEl = document.getElementById('classNotifyStatusText');
+    if(!listEl || !statusEl) return;
+    listEl.innerHTML = YEAR_OPTIONS.map(year => `
+      <label class="class-notify-option">
+        <input type="checkbox" class="class-notify-year" value="${escapeHtml(year)}">
+        <span>${escapeHtml(year)}</span>
+      </label>`).join('');
+    const closedYears = YEAR_OPTIONS.filter(isClassNotificationClosed);
+    statusEl.textContent = closedYears.length
+      ? `ক্লাস নোটিফিকেশন বন্ধ আছে: ${closedYears.join(', ')}। এই বর্ষগুলোর শিক্ষার্থীদের কাছে আজকের ক্লাস রুটিন নোটিফিকেশন যাবে না।`
+      : 'সব বর্ষের ক্লাস নোটিফিকেশন চালু আছে। রুটিন থাকলে শিক্ষার্থীরা ক্লাস আপডেট পাবে।';
+  }
+
+  function getSelectedClassNotifyYears() {
+    return [...document.querySelectorAll('.class-notify-year:checked')].map(input => input.value);
+  }
+
+  function setClassNotificationsForSelectedYears(closed) {
+    const years = getSelectedClassNotifyYears();
+    if(!years.length) { showError('classRoutineError','এক বা একাধিক বর্ষ নির্বাচন করুন।'); return; }
+    store.classNotificationClosed = store.classNotificationClosed || {};
+    years.forEach(year => {
+      if(closed) store.classNotificationClosed[year] = true;
+      else delete store.classNotificationClosed[year];
+    });
+    if(!saveStore()) return;
+    renderClassNotificationControls();
+    renderAdminClassRoutineList();
+    renderMyUpdates();
+  }
 
   function previewNoticeImage(input) {
     const preview = document.getElementById('nImagePreview');
@@ -1422,8 +1744,11 @@
     const board=document.getElementById('upcomingExamBoard'); if(!board) return;
     const now=new Date();
     const upcoming=Object.entries(store.exams)
-      .map(([key,exam])=>({key,exam,date:parseExamDate(getExamDateTime(exam))}))
-      .filter(i=>i.date&&i.date.getTime()>=now.getTime()).sort((a,b)=>a.date-b.date);
+      .map(([key,exam])=>{
+        const dateTime = getExamDateTime(exam);
+        return {key,exam,date:parseExamDate(dateTime),until:getUpcomingUntil(dateTime)};
+      })
+      .filter(i=>i.date&&i.until&&i.until.getTime()>=now.getTime()).sort((a,b)=>a.date-b.date);
     if(!upcoming.length) { board.innerHTML=`<div class="notice-item"><div class="notice-date">--</div><div class="notice-text">এখনো কোনো আসন্ন পরীক্ষার তারিখ সেভ করা নেই।</div></div>`; return; }
     board.innerHTML=upcoming.map(item=>{
       const rem=item.date.getTime()-now.getTime(), body=getExamBody(item.exam);
@@ -1437,8 +1762,8 @@
     const upcoming=Object.entries(store.practicalClasses)
       .map(([year,ci])=>{
         const dt=typeof ci==='string'?'':(ci?.dateTime||'');
-        return {year,date:parseExamDate(dt),body:typeof ci==='string'?ci:(ci?.body||''),dateTime:dt};
-      }).filter(i=>i.date&&i.date.getTime()>=now.getTime()).sort((a,b)=>a.date-b.date);
+        return {year,date:parseExamDate(dt),until:getUpcomingUntil(dt),body:typeof ci==='string'?ci:(ci?.body||''),dateTime:dt};
+      }).filter(i=>i.date&&i.until&&i.until.getTime()>=now.getTime()).sort((a,b)=>a.date-b.date);
     if(!upcoming.length) { board.innerHTML=`<div class="notice-item"><div class="notice-date">--</div><div class="notice-text">এখনো কোনো আসন্ন ব্যবহারিক ক্লাসের তারিখ সেভ করা নেই।</div></div>`; return; }
     board.innerHTML=upcoming.map(item=>{
       const rem=item.date.getTime()-now.getTime();
@@ -1450,8 +1775,11 @@
     const board=document.getElementById('upcomingPracticalExamBoard'); if(!board) return;
     const now=new Date();
     const upcoming=Object.entries(store.practicalExams)
-      .map(([year,exam])=>({year,exam,date:parseExamDate(getExamDateTime(exam))}))
-      .filter(i=>i.date&&i.date.getTime()>=now.getTime()).sort((a,b)=>a.date-b.date);
+      .map(([year,exam])=>{
+        const dateTime = getExamDateTime(exam);
+        return {year,exam,date:parseExamDate(dateTime),until:getUpcomingUntil(dateTime)};
+      })
+      .filter(i=>i.date&&i.until&&i.until.getTime()>=now.getTime()).sort((a,b)=>a.date-b.date);
     if(!upcoming.length) { board.innerHTML=`<div class="notice-item"><div class="notice-date">--</div><div class="notice-text">এখনো কোনো আসন্ন ব্যবহারিক পরীক্ষার তারিখ সেভ করা নেই।</div></div>`; return; }
     board.innerHTML=upcoming.map(item=>{
       const rem=item.date.getTime()-now.getTime(), body=getExamBody(item.exam);
@@ -1510,7 +1838,7 @@
     renderAdminClassRoutineList();
     renderMyUpdates();
     showSuccess('classRoutineSuccess');
-    if(day === getTodayName()) {
+    if(day === getTodayName() && !isClassNotificationClosed(year)) {
       sendLocalNotification('আজকের ক্লাস রুটিন আপডেট', `${year}: ${items.length}টি ক্লাস যোগ হয়েছে`, year);
     }
   }
@@ -1522,11 +1850,11 @@
     const v=document.getElementById('examBody').value.trim();
     if(!v){showError('examError','পরীক্ষার তথ্য লিখে তারপর সেভ করুন।');return;}
     const d=parseExamDate(dt); if(!d){showError('examError','পরীক্ষার তারিখ নির্বাচন করুন।');return;}
-    store.exams[`${y} - ${type}`]={body:v,dateTime:d.toISOString(),createdAt:new Date().toISOString()};
+    store.exams[`${y} - ${type}`]={body:v,dateTime:dt,createdAt:new Date().toISOString()};
     if(!saveStore()) return;
     document.getElementById('examBody').value=''; document.getElementById('examDate').value=''; document.getElementById('examTime').value='';
     renderUpcomingExams(); renderAdminExamList(); renderMyUpdates(); showSuccess('examSuccess');
-    sendLocalNotification('নতুন পরীক্ষার আপডেট', `${y} ${type}: ${formatExamDateTime(d.toISOString())}`, y);
+    sendLocalNotification('নতুন পরীক্ষার আপডেট', `${y} ${type}: ${formatExamDateTime(dt)}`, y);
   }
 
   function saveAssign() {
@@ -1548,11 +1876,11 @@
     const body=document.getElementById('practicalClassBody').value.trim();
     if(!body){showError('practicalClassError','ব্যবহারিক ক্লাসের তথ্য লিখে তারপর সেভ করুন।');return;}
     const d=parseExamDate(dt); if(!d){showError('practicalClassError','ব্যবহারিক ক্লাসের তারিখ নির্বাচন করুন।');return;}
-    store.practicalClasses[y]={body,dateTime:d.toISOString(),createdAt:new Date().toISOString()}; saveStore();
+    store.practicalClasses[y]={body,dateTime:dt,createdAt:new Date().toISOString()}; saveStore();
     document.getElementById('practicalClassBody').value='';
     document.getElementById('practicalClassDate').value=''; document.getElementById('practicalClassTime').value='';
     renderUpcomingPracticalClasses(); renderAdminPracticalClassList(); renderMyUpdates(); showSuccess('practicalClassSuccess');
-    sendLocalNotification('নতুন ব্যবহারিক ক্লাস', `${y}: ${formatExamDateTime(d.toISOString())}`, y);
+    sendLocalNotification('নতুন ব্যবহারিক ক্লাস', `${y}: ${formatExamDateTime(dt)}`, y);
   }
 
   function savePracticalExam() {
@@ -1561,11 +1889,11 @@
     const v=document.getElementById('practicalExamBody').value.trim();
     if(!v){showError('practicalExamError','ব্যবহারিক পরীক্ষার তথ্য লিখে তারপর সেভ করুন।');return;}
     const d=parseExamDate(dt); if(!d){showError('practicalExamError','ব্যবহারিক পরীক্ষার তারিখ নির্বাচন করুন।');return;}
-    store.practicalExams[y]={body:v,dateTime:d.toISOString(),createdAt:new Date().toISOString()};
+    store.practicalExams[y]={body:v,dateTime:dt,createdAt:new Date().toISOString()};
     if(!saveStore()) return;
     document.getElementById('practicalExamBody').value=''; document.getElementById('practicalExamDate').value=''; document.getElementById('practicalExamTime').value='';
     renderUpcomingPracticalExams(); renderAdminPracticalExamList(); renderMyUpdates(); showSuccess('practicalExamSuccess');
-    sendLocalNotification('নতুন ব্যবহারিক পরীক্ষা', `${y}: ${formatExamDateTime(d.toISOString())}`, y);
+    sendLocalNotification('নতুন ব্যবহারিক পরীক্ষা', `${y}: ${formatExamDateTime(dt)}`, y);
   }
 
   function saveHoliday() {
@@ -1654,7 +1982,7 @@
     if(!items.length){el.innerHTML='<p class="empty-list">অটো আপডেটের জন্য কোনো ক্লাস রুটিন নেই।</p>';return;}
     el.innerHTML=items.map(item=>`
       <div class="admin-saved-item">
-        <div class="item-text"><strong>${escapeHtml(item.year)} · ${escapeHtml(item.day)} · ${escapeHtml(item.time)}</strong><span>${escapeHtml(item.subject)}${item.note?' · '+escapeHtml(item.note):''}</span></div>
+        <div class="item-text"><strong>${escapeHtml(item.year)} · ${escapeHtml(item.day)} · ${escapeHtml(item.time)}</strong><span>${escapeHtml(item.subject)}${item.note?' · '+escapeHtml(item.note):''}</span>${isClassNotificationClosed(item.year)?'<span style="color:#bf360c;font-weight:700;">ক্লাস নোটিফিকেশন বন্ধ</span>':''}</div>
         <button class="btn-delete" data-type="classRoutine" data-index="${item.index}">🗑️ ডিলিট</button>
       </div>`).join('');
     attachDeleteHandlers(el);
@@ -1738,7 +2066,9 @@
   }
 
   renderAll();
+  if(isStudentProfileRequired()) setTimeout(openRequiredStudentModal, 250);
   initRemoteSync();
+  initNotificationWorker();
   setInterval(()=>{ renderUpcomingExams(); renderUpcomingPracticalClasses(); renderUpcomingPracticalExams(); notifyTodayStudyUpdates(); }, 60000);
 </script>
 </body>
